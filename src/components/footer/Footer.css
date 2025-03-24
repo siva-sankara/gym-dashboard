@@ -1,0 +1,201 @@
+footer {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding-top: 4rem;
+    margin-top: 4rem;
+}
+
+.footer__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer__container article {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer__container article h4 {
+    color: #ff5722;
+    margin-bottom: 0.6rem;
+    font-size: 1.1rem;
+}
+
+.footer__container article p {
+    color: #b3b3b3;
+    line-height: 1.5;
+}
+
+.footer__socials {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.footer__socials a {
+    background: #333;
+    color: #fff;
+    padding: 0.7rem;
+    border-radius: 50%;
+    display: flex;
+    transition: all 0.3s ease;
+}
+
+.footer__socials a:hover {
+    background: #ff5722;
+}
+
+.footer__contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer__contact-details div {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #b3b3b3;
+}
+
+.footer__links, .footer__admin {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.footer__links a, .footer__admin a {
+    color: #b3b3b3;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer__links a:hover, .footer__admin a:hover {
+    color: #ff5722;
+}
+
+.footer__copyright {
+    text-align: center;
+    padding: 1.5rem 0;
+    border-top: 1px solid #333;
+    margin-top: 4rem;
+    color: #b3b3b3;
+}
+
+/* Media Queries */
+@media screen and (max-width: 768px) {
+    .footer__container {
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    footer{
+        padding-top: 2rem;
+        margin-top: 1rem;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .footer__container {
+        grid-template-columns: 1fr;
+       
+    }
+    footer{
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+}
+/* ... existing styles ... */
+
+.footer__nearby-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer__nearby-list p {
+    color: #b3b3b3;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer__location {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ff5722;
+}
+
+.footer__auth-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.footer__button {
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.footer__button.login {
+    background: transparent;
+    border: 2px solid #ff5722;
+    color: #ff5722;
+}
+
+.footer__button.signup {
+    background: #ff5722;
+    color: white;
+    border: 2px solid #ff5722;
+}
+
+.footer__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px rgba(255, 87, 34, 0.2);
+}
+
+.footer__membership {
+    color: #b3b3b3;
+}
+
+.footer__membership ul {
+    list-style: none;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+}
+
+.footer__membership li {
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.footer__membership li::before {
+    content: "•";
+    color: #ff5722;
+    position: absolute;
+    left: -0.5rem;
+}
+
+/* Update media queries for better responsiveness */
+@media screen and (max-width: 768px) {
+    .footer__auth-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer__button {
+        text-align: center;
+    }
+}
