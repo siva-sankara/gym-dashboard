@@ -189,7 +189,7 @@
 }
 /* Add scrollbar styling for the preview */
 .todo-preview::-webkit-scrollbar {
-  width: 6px;
+  width: 1px;
 }
 
 .todo-preview::-webkit-scrollbar-track {
@@ -219,7 +219,7 @@
 .todos-section {
   background: rgba(255, 255, 255, 0.1);
   padding: clamp(1rem, 2vw, 2rem);
-  width: clamp(300px, 45%, 600px);
+  width: clamp(300px, 52%, 600px);
   min-height: fit-content;
   border-radius: 15px;
   backdrop-filter: blur(10px);
@@ -324,14 +324,18 @@ margin: 0;
 .todos-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-height: clamp(300px, 60vh, 600px);
+  gap: 15px;
+  max-height: 400px;
   overflow-y: auto;
-  padding-right: 10px;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  margin-top: 20px;
 }
 
+
 .todos-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6ic;
 }
 
 .todos-list::-webkit-scrollbar-track {
@@ -344,56 +348,93 @@ margin: 0;
   border-radius: 4px;
 }
 
+
 .todo-item {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  align-items: center;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   transition: all 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .todo-item:hover {
+  background: rgba(255, 255, 255, 0.12);
   transform: translateX(5px);
-  background: rgba(255, 255, 255, 0.1);
 }
 
 .todo-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
+  flex: 1;
 }
+
 
 .todo-content input[type="checkbox"] {
   width: 20px;
   height: 20px;
   cursor: pointer;
+  accent-color: #ff4757;
+}
+
+.todo-content span {
+  font-size: 1.1rem;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.todo-content span.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 .todo-deadline {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
   display: flex;
   align-items: center;
   gap: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  margin-right: 15px;
 }
-
 .todo-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  gap: 10px;
 }
 
 .todo-actions button {
-  background: rgba(255, 255, 255, 0.1);
+  background: transparent;
   border: none;
-  cursor: pointer;
   color: white;
   padding: 8px;
   border-radius: 6px;
+  cursor: pointer;
   transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.todo-actions button:hover {
+  background: rgba(255, 71, 87, 0.2);
+  color: #ff4757;
+}
+
+.todo-actions button.edit-btn {
+  color: #ffa502;
+}
+.todo-actions button.edit-btn:hover {
+  background: rgba(255, 165, 2, 0.2);
+}
+
+.todo-actions button.delete-btn {
+  color: #ff4757;
+}
+
+.todo-actions button.delete-btn:hover {
+  background: rgba(255, 71, 87, 0.2);
 }
 
 .todo-actions button:hover {
@@ -438,7 +479,57 @@ button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.edit-todo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
 
+.edit-form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.cancel-edit-btn {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.cancel-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.selected-todos-list .todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.selected-todos-list .todo-info-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.selected-todos-list .todo-actions {
+  display: flex;
+  gap: 8px;
+}
 @media (max-width: 1200px) {
   .todo-calendar-container {
     padding: 1.5rem 1rem;
@@ -608,6 +699,7 @@ margin: 0 0 10px 0;
   gap: 10px;
   max-height: 200px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 /* Responsive adjustments */
 @media (max-width: 1400px) {

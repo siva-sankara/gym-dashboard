@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const BASE_URL = 'http://localhost:8080/api/v1';
-const BASE_URL = "https://gym-mrck.onrender.com/api/v1"
+const BASE_URL = 'http://localhost:8080/api/v1';
+// const BASE_URL = "https://gym-mrck.onrender.com/api/v1"
 
 // Add token from localStorage to default headers
 const token = localStorage.getItem('token');
@@ -226,6 +226,16 @@ export const getTodosByDate = async (date) => {
             }
         });
         
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+//register gym in deatabase
+export const registerGym = async (gymData) => {
+    try {
+        const response = await api.post('/gyms/register', gymData);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
