@@ -9,8 +9,11 @@ const api = axios.create({
     baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
-        'Authorization': token ? `Bearer ${token}` : ''
-    }
+        'Authorization': token ? `Bearer ${token}` : '',
+        // 'Access-Control-Allow-Origin': '*',
+        // 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+    },
+    // withCredentials: true
 });
 // Add request interceptor to dynamically update token
 api.interceptors.request.use((config) => {
@@ -150,7 +153,6 @@ export const updateUserAddress = async (addressData) => {
     }
 };
 
-
 // Create a new todo
 export const createTodo = async (todoData) => {
     try {
@@ -216,7 +218,6 @@ export const getCalendarTodos = async (month, year) => {
     }
 };
 
-
 // Get todos by specific date
 export const getTodosByDate = async (date) => {
     try {
@@ -236,6 +237,16 @@ export const getTodosByDate = async (date) => {
 export const registerGym = async (gymData) => {
     try {
         const response = await api.post('/gyms/register', gymData);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+//get gym details by id
+export const getGymById = async (gymId) => {
+    try {
+        const response = await api.get(`/gyms/${gymId}`);
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
