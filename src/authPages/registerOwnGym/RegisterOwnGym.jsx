@@ -148,10 +148,6 @@ const RegisterOwnGym = () => {
         if (areaValue.length > 3) {
             try {
                 const locationData = await getLocationFromAddress(areaValue);
-
-                console.log('====================================');
-                console.log(locationData);
-                console.log('====================================');
                 setFormData(prev => ({
                     ...prev,
                     location: {
