@@ -21,6 +21,7 @@ import { setUser } from './redux/slices/userSlice'
 import NearByGyms from './authPages/nearbyGyms/NearByGyms'
 import ToDoCalendar from './authPages/todosList/ToDoCalendar'
 import RegisterOwnGym from './authPages/registerOwnGym/RegisterOwnGym'
+import GymDetails from './components/gymDetails/GymDetails'
 
 
 function RoutesPage() {
@@ -139,7 +140,7 @@ function RoutesPage() {
                   <Route path="nearby-gyms" element={<NearByGyms />} />
                   <Route path="to-dos" element={<ToDoCalendar />} />
                   <Route path="register-gym" element={<RegisterOwnGym />} />
-
+                  <Route path="gym/:gymId" element={<GymDetails />} />
                 </Routes>
               </DashboardLayout>
             </ProtectedLayout>

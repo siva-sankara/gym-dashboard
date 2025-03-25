@@ -103,7 +103,7 @@
   border-radius: 15px;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   padding: 20px;
@@ -111,7 +111,7 @@
 
 .gym-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 6px rgba(0, 0, 0, 0.4);
 }
 
 .gym-header {

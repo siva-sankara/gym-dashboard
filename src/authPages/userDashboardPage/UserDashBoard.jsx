@@ -165,7 +165,7 @@ function UserDashBoard() {
   };
   return (
     <div>
-      <div className="landing-page">
+      <div className="landing-page-con">
         {/* Previous sections remain the same */}
         <section
           className="hero-section"
@@ -306,7 +306,7 @@ function UserDashBoard() {
                         </span>
                       ))}
                     </div>
-                    <Link to={`/gym/${gym._id}`}>
+                    <Link to={`/user-dashboard/gym/${gym._id}`}>
                       <button className="view-details">View Details</button>
                     </Link>
                   </div>
@@ -352,9 +352,9 @@ function UserDashBoard() {
                       </span>
                     ))}
                   </div>
-                  <Link to={`/gym/${gym._id}`} className="nearby-view-details">
-                    View Details
-                  </Link>
+                  <Link to={`/user-dashboard/gym/${gym._id}`}>
+                      <button className="view-details">View Details</button>
+                    </Link>
                 </div>
               </div>
             ))}

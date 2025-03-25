@@ -61,10 +61,11 @@ import './Login.css';
         </h2>
         {localError && <div style={{ color: 'red', marginBottom: '1rem', textAlign: 'center' }}>{localError}</div>}
         <form onSubmit={handleLogin} className="auth-form">
-          <div className="form-group">
+        <div className="form-group">
             <label htmlFor="email" style={{ color: 'black' }}>Email Address</label>
             <input
-            style={{ color: 'black' }}
+              style={{ color: 'black' }}
+              className="input-text"
               id="email"
               type="text"
               name="email"
@@ -77,7 +78,8 @@ import './Login.css';
           <div className="form-group">
             <label htmlFor="password" style={{ color: 'black' }}>Password</label>
             <input
-            style={{ color: 'black' }}
+              style={{ color: 'black' }}
+              className="input-text"
               id="password"
               type="password"
               name="password"

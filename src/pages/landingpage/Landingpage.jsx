@@ -238,7 +238,7 @@ export function LandingPage() {
 
   return (
  <div>
-     <div className="landing-page">
+     <div className="landing-page-cons landing-page">
       {/* Previous sections remain the same */}
       <section 
         className="hero-section"

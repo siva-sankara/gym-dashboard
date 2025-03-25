@@ -72,7 +72,7 @@ const AuthNavbar = ({ onLogout }) => {
       { to: '/profile/notifications', icon: <FaBell />, text: 'Notifications' },
       { to: '/profile/edit', icon: <FaEdit />, text: 'Edit Profile' },
       { to: '/profile/settings', icon: <FaCog />, text: 'Settings' },
-      { to: '/profile/subscriptions', icon: <FaCreditCard />, text: 'Subscriptions' },
+      { to: '/profile/subscriptions', icon: <FaCreditCard />, text: 'Your Subscriptions' },
       {
         to: '/logout',
         icon: <FaSignOutAlt />,
