@@ -121,7 +121,7 @@ const NearByGyms = () => {
           placeholder="Search gyms..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-bar"
+          className="search-bar search-gym"
         />
       </div>
 

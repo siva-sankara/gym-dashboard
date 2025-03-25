@@ -232,6 +232,16 @@ export const getTodosByDate = async (date) => {
     }
 };
 
+//register gym in deatabase
+export const registerGym = async (gymData) => {
+    try {
+        const response = await api.post('/gyms/register', gymData);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
 
 export default api;
 

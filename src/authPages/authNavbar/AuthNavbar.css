@@ -43,7 +43,7 @@
 .role-navbar__menu {
   display: flex;
   gap: 1.5rem;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .role-navbar__link {
@@ -69,7 +69,46 @@
 .role-navbar__link-text {
   font-weight: 500;
 }
+.role-navbar__link-container {
+  position: relative;
+}
 
+.role-navbar__dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: rgb(255, 253, 253);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  padding: 8px 0;
+}
+
+.role-navbar__dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: rgb(27, 25, 25);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.role-navbar__dropdown-item:hover {
+  background: rgba(255, 71, 87, 0.2);
+}
+
+.role-navbar__dropdown-icon {
+  margin-right: 12px;
+  font-size: 1.1rem;
+  color: #ff4757;
+}
+
+.role-navbar__dropdown-text {
+  font-size: 0.9rem;
+}
 @media (max-width: 768px) {
   .role-navbar {
     padding: 1rem;
@@ -97,18 +136,26 @@
   }
 
   .role-navbar__link {
-    width: 100%;
-    padding: 1rem;
+    width: 96%;
+    /* padding: 1rem; */
   }
 
   .role-navbar__link:hover {
     background: rgba(255, 71, 87, 0.05);
+  }
+  .role-navbar__dropdown {
+    position: static;
+    margin-top: 8px;
+    width: 100%;
   }
 }
 
 @media (max-width: 480px) {
   .role-navbar__logo-text {
     font-size: 1.25rem;
+  }
+  .role-navbar__link{
+    width: 90%;
   }
 }
 .role-navbar__link--active {

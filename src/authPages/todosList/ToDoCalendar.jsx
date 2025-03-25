@@ -21,7 +21,13 @@ const ToDoCalendar = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedDateTodos, setSelectedDateTodos] = useState([]);
-
+  const [editingTodo, setEditingTodo] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    title: '',
+    deadline: '',
+    priority: '',
+    notifications: true
+  });
 
   // Fetch todos for the current month
   const fetchMonthTodos = async () => {
@@ -30,9 +36,6 @@ const ToDoCalendar = () => {
       const month = selectedDate.getMonth() + 1; // JavaScript months are 0-based
       const year = selectedDate.getFullYear();
       const response = await getCalendarTodos(month, year);
-      console.log('====================================');
-      console.log(response);
-      console.log('====================================');
       setTodos(response.data);
       setError(null);
     } catch (err) {
@@ -183,6 +186,57 @@ const ToDoCalendar = () => {
     };
   };
 
+  const handleEditTodo = (todo) => {
+    setEditingTodo(todo);
+    setEditFormData({
+      title: todo.title,
+      deadline: todo.deadline ? new Date(todo.deadline).toISOString().slice(0, 16) : '',
+      priority: todo.priority,
+      notifications: todo.notifications
+    });
+    setShowAddForm(false);
+
+    // Add smooth scrolling
+    setTimeout(() => {
+      document.getElementById('edit-form').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }, 100);
+  };
+  const handleUpdateTodo = async () => {
+    try {
+      setLoading(true);
+      const updatedData = {
+        title: editFormData.title,
+        description: editFormData.title,
+        deadline: editFormData.deadline || null,
+        priority: editFormData.priority,
+        notifications: editFormData.notifications
+      };
+
+      await updateTodo(editingTodo._id, updatedData);
+      await fetchMonthTodos(); // Refresh todos
+      setEditingTodo(null); // Close edit form
+      setError(null);
+
+      showToast({
+        type: 'success',
+        message: 'Task updated successfully!',
+        playSound: true
+      });
+    } catch (err) {
+      setError('Failed to update todo');
+      showToast({
+        type: 'error',
+        message: 'Failed to update task!',
+        playSound: true
+      });
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleTodoIndicatorClick = async (e, date) => {
     e.stopPropagation(); // Prevent calendar day click
     try {
@@ -214,14 +268,14 @@ const ToDoCalendar = () => {
       const isToday = formatDate(new Date()) === dateKey;
       days.push(
         <div
-        key={day}
-        className={`calendar-day ${isSelected ? 'selected' : ''} ${hasTodos ? 'has-todos' : ''} ${isToday ? 'today' : ''}`}
-        onClick={() => {
-          const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
-          setSelectedDate(newDate);
-          setSelectedDateTodos(todosForDay); // Also update selected todos
-        }}
-      >
+          key={day}
+          className={`calendar-day ${isSelected ? 'selected' : ''} ${hasTodos ? 'has-todos' : ''} ${isToday ? 'today' : ''}`}
+          onClick={() => {
+            const newDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day);
+            setSelectedDate(newDate);
+            setSelectedDateTodos(todosForDay); // Also update selected todos
+          }}
+        >
           <span className="day-number">{day}</span>
           {hasTodos && (
             <div className="todo-indicator-wrapper">
@@ -352,11 +406,29 @@ const ToDoCalendar = () => {
                       />
                       <span className={todo.completed ? 'completed' : ''}>{todo.title}</span>
                     </div>
-                    {todo.deadline && (
-                      <div className="todo-deadline">
-                        <FaClock /> {new Date(todo.deadline).toLocaleString()}
+                    <div className="todo-info-actions">
+                      {todo.deadline && (
+                        <div className="todo-deadline">
+                          <FaClock /> {new Date(todo.deadline).toLocaleString()}
+                        </div>
+                      )}
+                      <div className="todo-actions">
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEditTodo(todo)}
+                          disabled={loading}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteTodo(todo._id)}
+                          disabled={loading}
+                        >
+                          <FaTrash />
+                        </button>
                       </div>
-                    )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -408,34 +480,103 @@ const ToDoCalendar = () => {
           {loading ? (
             <div className="loading-spinner">Loading...</div>
           ) : (
-            <div className="todos-list">
-              {todos[formatDate(selectedDate)]?.map(todo => (
-                <div key={todo._id} className={`todo-item priority-${todo.priority}`}>
-                  <div className="todo-content">
-                    <input
-                      type="checkbox"
-                      checked={todo.completed}
-                      onChange={() => handleToggleTodo(todo._id, todo.completed)}
-                      disabled={loading}
-                    />
-                    <span className={todo.completed ? 'completed' : ''}>{todo.title}</span>
-                  </div>
-                  {todo.deadline && (
-                    <div className="todo-deadline">
-                      <FaClock /> {new Date(todo.deadline).toLocaleString()}
-                    </div>
-                  )}
-                  <div className="todo-actions">
-                    <button
-                      onClick={() => handleDeleteTodo(todo._id)}
-                      disabled={loading}
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
+            <>{editingTodo && (
+              <div id="edit-form" className="edit-todo-form">
+                <div className="edit-form-header">
+                  <h3>Edit Task</h3>
+                  <span className="priority-badge">{editFormData.priority} Priority</span>
                 </div>
-              ))}
-            </div>
+                <input
+                  type="text"
+                  value={editFormData.title}
+                  onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                  placeholder="Edit task..."
+                  className="todo-input"
+                  disabled={loading}
+                />
+                <input
+                  type="datetime-local"
+                  value={editFormData.deadline}
+                  onChange={(e) => setEditFormData({ ...editFormData, deadline: e.target.value })}
+                  className="deadline-input"
+                  disabled={loading}
+                />
+                <select
+                  value={editFormData.priority}
+                  onChange={(e) => setEditFormData({ ...editFormData, priority: e.target.value })}
+                  className="priority-select"
+                  disabled={loading}
+                >
+                  <option value="low">Low Priority</option>
+                  <option value="medium">Medium Priority</option>
+                  <option value="high">High Priority</option>
+                </select>
+                <label className="notification-toggle">
+                  <input
+                    type="checkbox"
+                    checked={editFormData.notifications}
+                    onChange={(e) => setEditFormData({ ...editFormData, notifications: e.target.checked })}
+                    disabled={loading}
+                  />
+                  Enable Notifications
+                </label>
+                <div className="edit-form-actions">
+                  <button
+                    onClick={handleUpdateTodo}
+                    className="submit-todo-btn"
+                    disabled={loading}
+                  >
+                    {loading ? 'Updating...' : 'Update Task'}
+                  </button>
+                  <button
+                    onClick={() => setEditingTodo(null)}
+                    className="cancel-edit-btn"
+                    disabled={loading}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+              <div className="todos-list">
+                {todos[formatDate(selectedDate)]?.map(todo => (
+                  <div key={todo._id} className={`todo-item priority-${todo.priority}`}>
+                    <div className="todo-content">
+                      <input
+                        type="checkbox"
+                        checked={todo.completed}
+                        onChange={() => handleToggleTodo(todo._id, todo.completed)}
+                        disabled={loading}
+                      />
+                      <span className={todo.completed ? 'completed' : ''}>{todo.title}</span>
+                    </div>
+                    <div className="todo-info-actions">
+                      {todo.deadline && (
+                        <div className="todo-deadline">
+                          <FaClock /> {new Date(todo.deadline).toLocaleString()}
+                        </div>
+                      )}
+                      <div className="todo-actions">
+                        <button
+                          className="edit-btn"
+                          onClick={() => handleEditTodo(todo)}
+                          disabled={loading}
+                        >
+                          <FaEdit />
+                        </button>
+                        <button
+                          className="delete-btn"
+                          onClick={() => handleDeleteTodo(todo._id)}
+                          disabled={loading}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
