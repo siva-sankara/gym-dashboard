@@ -50,7 +50,7 @@
 input, textarea {
     width: 96%;
     padding: clamp(0.6rem, 1vw, 0.8rem);
-    /* margin-bottom: 1rem; */
+    margin-bottom: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
@@ -211,7 +211,7 @@ textarea {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: clamp(0.5rem, 1vw, 0.9rem);
+    font-size: clamp(0.8rem, 1vw, 1.2rem);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 .bulk-timing-section {

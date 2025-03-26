@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerGym } from '../../apis/apis';
+import { getLocationDetails, registerGym } from '../../apis/apis';
 import './RegisterOwnGym.css';
 import { showToast } from '../../components/toast/Toast';
 import { FaGym, FaMapMarkerAlt, FaPhone, FaCopy, FaSearch, FaGlobe, FaBusinessTime, FaClock } from 'react-icons/fa';
@@ -79,6 +79,30 @@ const RegisterOwnGym = () => {
         e.preventDefault();
         setLoading(true);
         try {
+            if (formData.location.coordinates.coordinates[0] === 0 &&
+                formData.location.coordinates.coordinates[1] === 0) {
+                const addressString = `${formData.location.address}, ${formData.location.area}, ${formData.location.city}, ${formData.location.state}, ${formData.location.pincode}`;
+                try {
+                    const locationData = await getLocationFromAddress(addressString);
+                    formData.location.coordinates = {
+                        type: 'Point',
+                        coordinates: [
+                            locationData.coordinates.longitude,  // Longitude first
+                            locationData.coordinates.latitude    // Latitude second
+                        ]
+                    };
+                } catch (error) {
+                    showToast({
+                        type: 'error',
+                        message: 'Please provide valid location details or use detect location',
+                        playSound: true
+                    });
+                    setLoading(false);
+                    return;
+                }
+            }
+
+            // Proceed with gym registration
             await registerGym(formData);
             showToast({
                 type: 'success',
@@ -100,7 +124,6 @@ const RegisterOwnGym = () => {
         const { name, value } = e.target;
         setBulkTiming(prev => ({ ...prev, [name]: value }));
     };
-
     const applyBulkTiming = () => {
         setFormData(prev => ({
             ...prev,
@@ -152,14 +175,15 @@ const RegisterOwnGym = () => {
                     ...prev,
                     location: {
                         ...prev.location,
-                        city: locationData.address.city,
-                        state: locationData.address.state,
-                        pincode: locationData.address.pincode,
+                        city: locationData?.address.city,
+                        state: locationData?.address.state,
+                        pincode: locationData?.address.pincode || locationData?.address?.postcode,
                         coordinates: {
                             type: 'Point',
                             coordinates: [
-                                locationData.coordinates.longitude,
-                                locationData.coordinates.latitude
+                                locationData?.coordinates.latitude  ,
+                                locationData?.coordinates.longitude,
+                                 
                             ]
                         }
                     }
@@ -173,9 +197,82 @@ const RegisterOwnGym = () => {
             }
         }
     };
+    const detectCurrentLocation = async () => {
+        if (!navigator.geolocation) {
+            showToast({
+                type: 'error',
+                message: 'Geolocation is not supported by your browser',
+                playSound: true
+            });
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                try {
+                    const locationData = await getLocationDetails(
+                        position.coords.latitude,
+                        position.coords.longitude
+                    );
+                    setFormData(prev => ({
+                        ...prev,
+                        location: {
+                            ...prev.location,
+                            address: locationData.display_name,
+                            area: locationData.address?.suburb || locationData.address?.village || '',
+                            city: locationData.address?.city || locationData.address?.county || '',
+                            state: locationData.address?.state || '',
+                            pincode: locationData.address?.postcode || locationData.address?.pincode ||'',
+                            coordinates: {
+                                type: 'Point',
+                                coordinates: [
+                                    parseFloat(locationData.lon),    // Longitude first
+                                    parseFloat(locationData.lat)     // Latitude second
+                                ]
+                            }
+                        }
+                    }));
+
+                    showToast({
+                        type: 'success',
+                        message: 'Location detected successfully!',
+                        playSound: true
+                    });
+                } catch (error) {
+                    showToast({
+                        type: 'error',
+                        message: 'Failed to fetch location details',
+                        playSound: true
+                    });
+                }
+            },
+            (error) => {
+                let errorMessage = 'Failed to detect location';
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage = 'Please allow location access to use this feature';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage = 'Location information is unavailable';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage = 'Location request timed out';
+                        break;
+                    default:
+                        errorMessage = 'An unknown error occurred';
+                }
+                showToast({
+                    type: 'error',
+                    message: errorMessage,
+                    playSound: true
+                });
+            }
+        );
+    };
     return (
         <div className="register-gym-container">
-            <form onSubmit={handleSubmit} className="register-gym-form">
+            <form onSubmit={handleSubmit} className="register-gym-form" autoComplete="off"
+                spellCheck="false">
                 <h2> Register Your Gym</h2>
 
                 <div className="form-section">
@@ -187,6 +284,8 @@ const RegisterOwnGym = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
+                        autoComplete="new-password"
+                        spellCheck="false"
                     />
                     <textarea
                         name="description"
@@ -194,13 +293,27 @@ const RegisterOwnGym = () => {
                         value={formData.description}
                         onChange={handleChange}
                         required
+                        autoComplete="new-password"
+                        spellCheck="false"
                     />
                 </div>
 
                 <div className="form-section">
                     <div className="location-head">
-                        <h3><FaMapMarkerAlt /> Location Details</h3>
-                        <p>Detect My Location</p>
+                        <h3> Location Details</h3>
+                        <p
+                            onClick={detectCurrentLocation}
+                            style={{
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                // gap: '5px',
+                                margin:'0'
+                              
+                            }}
+                        >
+                            <FaMapMarkerAlt /> Detect My Location
+                        </p>
                     </div>
                     <input
                         type="text"
@@ -209,6 +322,8 @@ const RegisterOwnGym = () => {
                         value={formData.location.address}
                         onChange={(e) => handleChange(e, 'location')}
                         required
+                        autoComplete="new-password"
+                        spellCheck="false"
                     />
                     <div className="form-row">
                         <div className="input-with-icon">
@@ -219,6 +334,8 @@ const RegisterOwnGym = () => {
                                 value={formData.location.area}
                                 onChange={handleAreaSearch}
                                 required
+                                autoComplete="new-password"
+                                spellCheck="false"
                             />
                         </div>
                         <input
@@ -228,6 +345,8 @@ const RegisterOwnGym = () => {
                             value={formData.location.city}
                             onChange={(e) => handleChange(e, 'location')}
                             required
+                            autoComplete="new-password"
+                            spellCheck="false"
                         />
                     </div>
                     <div className="form-row">
@@ -238,6 +357,8 @@ const RegisterOwnGym = () => {
                             value={formData.location.state}
                             onChange={(e) => handleChange(e, 'location')}
                             required
+                            autoComplete="new-password"
+                            spellCheck="false"
                         />
                         <input
                             type="text"
@@ -246,6 +367,8 @@ const RegisterOwnGym = () => {
                             value={formData.location.pincode}
                             onChange={(e) => handleChange(e, 'location')}
                             required
+                            autoComplete="new-password"
+                            spellCheck="false"
                         />
                     </div>
                 </div>
@@ -260,6 +383,8 @@ const RegisterOwnGym = () => {
                             value={formData.contactInfo.email}
                             onChange={(e) => handleChange(e, 'contactInfo')}
                             required
+                            autoComplete="new-password"
+
                         />
                         <input
                             type="tel"
@@ -268,6 +393,7 @@ const RegisterOwnGym = () => {
                             value={formData.contactInfo.phone}
                             onChange={(e) => handleChange(e, 'contactInfo')}
                             required
+                            autoComplete="new-password"
                         />
                         <input
                             type="url"
@@ -275,6 +401,7 @@ const RegisterOwnGym = () => {
                             placeholder="Website"
                             value={formData.contactInfo.website}
                             onChange={(e) => handleChange(e, 'contactInfo')}
+                            autoComplete="new-password"
                         />
                     </div>
 
@@ -287,6 +414,7 @@ const RegisterOwnGym = () => {
                             value={formData.businessDetails.registrationNumber}
                             onChange={(e) => handleChange(e, 'businessDetails')}
                             required
+                            autoComplete="new-password"
                         />
                         <input
                             type="text"
@@ -295,6 +423,7 @@ const RegisterOwnGym = () => {
                             value={formData.businessDetails.gstNumber}
                             onChange={(e) => handleChange(e, 'businessDetails')}
                             required
+                            autoComplete="new-password"
                         />
                         <input
                             type="text"
@@ -303,6 +432,7 @@ const RegisterOwnGym = () => {
                             value={formData.businessDetails.licenseNumber}
                             onChange={(e) => handleChange(e, 'businessDetails')}
                             required
+                            autoComplete="new-password"
                         />
                     </div>
                 </div>

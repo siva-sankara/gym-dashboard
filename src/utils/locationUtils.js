@@ -16,7 +16,6 @@ export const getLocationFromAddress = async (address) => {
                 }
             }
         );
-
         if (response.data && response.data.length > 0) {
             const location = response.data[0];
             const locationData = {
