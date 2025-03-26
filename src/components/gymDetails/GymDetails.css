@@ -42,11 +42,29 @@
 }
 
 .gym-hero-title {
+  font-family: 'Orbitron', 'Rajdhani', sans-serif;
   font-size: clamp(3rem, 8vw, 5rem);
-  font-weight: 800;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
   margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   line-height: 1.1;
+  background: linear-gradient(135deg, #ffffff 0%, #ff3547 70%, #ff8f98 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 15px rgba(255, 53, 71, 0.3);
+  position: relative;
+  animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  from {
+    filter: drop-shadow(0 0 2px rgba(255, 53, 71, 0.3));
+  }
+
+  to {
+    filter: drop-shadow(0 0 10px rgba(255, 53, 71, 0.6));
+  }
 }
 
 .gym-hero-metadata {
@@ -425,96 +443,222 @@
   color: #fff;
   font-size: 1.1rem;
 }
-.gym-features-section {
-    margin-bottom: 4rem;
+
+
+
+.gym-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.gym-feature-card {
+  background: #242424;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.gym-feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background: #2a2a2a;
+}
+
+.gym-feature-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #ff3547, #ff7b8a);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.gym-feature-card:hover .gym-feature-icon-wrapper {
+  transform: scale(1.1);
+}
+
+.gym-feature-icon-wrapper svg {
+  font-size: 2.5rem;
+  color: white;
+}
+
+.gym-feature-card h3 {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 500;
+}
+.gym-cta-section {
+  /* background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); */
+  /* border-radius: 16px; */
+  /* padding: 4rem 2rem; */
+  text-align: center;
+  /* position: relative; */
+  overflow: hidden;
+  /* margin: 4rem 0; */
+  /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); */
+}
+
+.gym-cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff3547, #ff7b8a);
+}
+
+.gym-cta-description {
+  font-size: 1.4rem;
+  color: #e0e0e0;
+  margin: 1.5rem 0 2.5rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gym-cta-button {
+  background: linear-gradient(135deg, #ff3547 0%, #ff7b8a 100%);
+  color: white;
+  border: none;
+  padding: 1rem 3rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gym-cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #ff7b8a 0%, #ff3547 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gym-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(255, 53, 71, 0.3);
+}
+
+.gym-cta-button:hover::before {
+  opacity: 1;
+}
+
+.gym-cta-icon {
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.gym-cta-button:hover .gym-cta-icon {
+  transform: translateX(5px);
+}
+
+.gym-plans-section{
+  margin-bottom: 0;
+}
+
+.gym-plan-card.highlighted {
+  transform: translateY(-10px);
+  border: 2px solid #28a745;
+  box-shadow: 0 10px 30px rgba(255, 53, 71, 0.2);
+  background: linear-gradient(145deg, #2a2a2a, #242424);
+}
+
+.gym-plan-card.highlighted .gym-plan-button {
+  background: #2a2a2a;
+  color:#28a745;
+  border: 2px solid #28a745;
+}
+
+.gym-plan-card.highlighted .gym-plan-name {
+  color: #28a745;
+}
+
+.gym-plan-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.gym-plan-card:not(.highlighted):hover {
+  transform: translateY(-5px);
+}
+.gym-plan-badge.selected {
+  background: #28a745;
+  color: white;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.gym-plan-card.highlighted .gym-plan-badge.selected {
+  animation: badgePulse 2s infinite;
+}
+.gym-loading-state,
+.gym-error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.gym-error-state {
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .gym-features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-  }
-  
-  .gym-feature-card {
-    background: #242424;
-    border-radius: 16px;
-    padding: 2rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-  
-  .gym-feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    background: #2a2a2a;
-  }
-  
-  .gym-feature-icon-wrapper {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, #ff3547, #ff7b8a);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1.5rem;
-    transition: transform 0.3s ease;
-  }
-  
-  .gym-feature-card:hover .gym-feature-icon-wrapper {
-    transform: scale(1.1);
-  }
-  
-  .gym-feature-icon-wrapper svg {
-    font-size: 2.5rem;
-    color: white;
-  }
-  
-  .gym-feature-card h3 {
-    color: #fff;
-    font-size: 1.2rem;
-    margin: 0;
-    font-weight: 500;
-  }
-  
-  @media (max-width: 768px) {
-    .gym-features-grid {
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-    }
-  
-    .gym-feature-icon-wrapper {
-      width: 60px;
-      height: 60px;
-    }
-  
-    .gym-feature-icon-wrapper svg {
-      font-size: 1.8rem;
-    }
-  
-    .gym-feature-card h3 {
-      font-size: 1rem;
-    }
-  }
-@media (min-width: 768px) {
-  .gym-contact-grid {
-    grid-template-columns: 3fr 2fr;
+  to {
+    opacity: 1;
   }
 }
 
-@media (max-width: 767px) {
-  .gym-location-header {
-    padding: 1rem;
+@keyframes badgePulse {
+  0% {
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
   }
-  
-  .gym-location-title {
-    font-size: 1rem;
+  50% {
+      box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4);
   }
-  
-  .gym-contact-subtitle {
-    font-size: 1.3rem;
+  100% {
+      box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
   }
 }
 
@@ -523,6 +667,7 @@
     opacity: 0;
     transform: scale(1.1);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -531,6 +676,81 @@
 
 .gym-hero-slide.active {
   animation: slideIn 1s ease-out forwards;
+}
+.gym-location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.map-toggle-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+.switch input:checked + .slider {
+  background-color: #28a745;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.toggle-label {
+  font-size: 0.9rem;
+  color: #fffbfb;
+  min-width: 85px;
 }
 
 @media (max-width: 1024px) {
@@ -542,10 +762,41 @@
     margin-left: 1rem;
   }
 }
-
 @media (max-width: 768px) {
+  .gym-features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .gym-feature-icon-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+
+  .gym-feature-icon-wrapper svg {
+    font-size: 1.8rem;
+  }
+
+  .gym-feature-card h3 {
+    font-size: 1rem;
+  }
+  .gym-contact-grid {
+    grid-template-columns: 3fr 2fr;
+  }
+  .gym-location-header {
+    padding: 1rem;
+  }
+
+  .gym-location-title {
+    font-size: 1rem;
+  }
+
+  .gym-contact-subtitle {
+    font-size: 1.3rem;
+  }
   .gym-hero-title {
-    font-size: clamp(2rem, 6vw, 3rem);
+    font-size: clamp(4rem, 6vw, 3rem);
+    font-family: 'Montserrat', sans-serif;
   }
 
   .gym-hero-content {
@@ -568,13 +819,27 @@
   .gym-contact-grid {
     grid-template-columns: 1fr;
   }
-
-  .gym-content-container {
-    padding: 2rem 1rem;
-  }
+.gym-content-container {
+  padding: 20px;
+}
 
   .gym-section-title {
     font-size: 1.8rem;
+    margin: 0;
+  }
+  .gym-cta-section {
+    padding: 3rem 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .gym-cta-description {
+    font-size: 1.2rem;
+    margin: 1rem 0 2rem;
+  }
+
+  .gym-cta-button {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
   }
 }
 
@@ -584,12 +849,32 @@
     align-items: flex-start;
     gap: 0.8rem;
   }
-
+  .gym-content-container {
+    padding: 0px;
+  }
+  .gym-features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
   .gym-hero-dot {
     display: none;
   }
-
+  .gym-plan-card {
+    margin: 0 20px;
+  }
+  .gym-plan-name{
+    margin: 0;
+  }
+  .gym-plan-price {
+    margin: 0;
+  }
   .gym-modal-content {
     padding: 1.5rem;
   }
+  .gym-about-section,
+.gym-plans-section,
+.gym-contact-section {
+  padding: 20px;
+  margin: 0;
+}
 }

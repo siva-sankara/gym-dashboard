@@ -665,7 +665,7 @@ margin: 0 0 10px 0;
   width: 100%;
 }
 .task-title span {
- border: 2px solid #ff4757;
+ /* border: 2px solid #ff4757; */
  width: 80%;
 }
 .task-title input[type="checkbox"] {

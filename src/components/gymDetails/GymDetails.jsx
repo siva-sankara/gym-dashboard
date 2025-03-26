@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import "./GymDetails.css";
 import { useParams } from "react-router-dom";
 import { getGymById } from "../../apis/apis";
-import { FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt, FaClock, FaParking,
+import {
+    FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt, FaClock, FaParking,
     FaShower,
     FaWifi,
     FaDumbbell,
     FaSwimmer,
     FaHotTub,
     FaRunning,
-    FaHeartbeat, FaCheck, FaArrowRight } from 'react-icons/fa';
+    FaHeartbeat, FaCheck, FaArrowRight,
+    FaExclamationTriangle,
+    FaExclamationCircle
+} from 'react-icons/fa';
 import GymMap from "../maps/GymMap";
+import Footer from "../footer/Footer";
+import Loader from "../../utils/Loader";
+
 
 
 // Add this constant at the top of your file
@@ -78,7 +85,8 @@ const GymDetails = () => {
     const [error, setError] = useState(null);
     const [currentBgImage, setCurrentBgImage] = useState(0);
     const [selectedPlan, setSelectedPlan] = useState(null);
-    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [isMapInteractive, setIsMapInteractive] = useState(false);
+    const [highlightedPlan, setHighlightedPlan] = useState(null);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -106,9 +114,19 @@ const GymDetails = () => {
         }
     }, [gymId]);
 
-    if (loading) return <div className="gym-loading-state">Loading gym details...</div>;
-    if (error) return <div className="gym-error-state">{error}</div>;
-    if (!gymId || !gymDetails) return <div className="gym-error-state">Gym not found</div>;
+    if (loading) return <Loader text="Loading gym details..." height="100vh" />;
+    if (error) return (
+        <div className="gym-error-state">
+            <FaExclamationCircle size={40} />
+            <p>{error}</p>
+        </div>
+    );
+    if (!gymId || !gymDetails) return (
+        <div className="gym-error-state">
+            <FaExclamationTriangle size={40} />
+            <p>Gym not found</p>
+        </div>
+    );
 
     return (
         <div className="gym-details-wrapper">
@@ -172,8 +190,15 @@ const GymDetails = () => {
                     <h2 className="gym-section-title">Membership Plans</h2>
                     <div className="gym-plans-grid">
                         {subscriptionPlans.map((plan, index) => (
-                            <div key={index} className={`gym-plan-card ${plan.popular ? 'popular' : ''}`}>
+                            <div
+                                key={index}
+                                className={`gym-plan-card ${plan.popular ? 'popular' : ''} ${highlightedPlan === plan.name ? 'highlighted' : ''
+                                    }`}
+                            >
                                 {plan.popular && <div className="gym-plan-badge">Most Popular</div>}
+                                {highlightedPlan === plan.name && (
+                                    <div className="gym-plan-badge selected">Selected</div>
+                                )}
                                 <h3 className="gym-plan-name">{plan.name}</h3>
                                 <div className="gym-plan-price">
                                     <span className="gym-price-currency">$</span>
@@ -190,25 +215,55 @@ const GymDetails = () => {
                                 </ul>
                                 <button
                                     className="gym-plan-button"
-                                    onClick={() => setSelectedPlan(plan)}
+                                    onClick={() => {
+                                        setHighlightedPlan(plan.name);
+                                        setSelectedPlan(plan);
+                                    }}
                                 >
-                                    Choose Plan
+                                    {highlightedPlan === plan.name ? 'Selected' : 'Choose Plan'}
                                 </button>
                             </div>
                         ))}
                     </div>
                 </section>
-
+                <section className="gym-cta-section">
+                    <h2 className="gym-section-title">Join Us Today</h2>
+                    <p className="gym-cta-description">
+                        Start your fitness journey with us today!
+                    </p>
+                    <button className="gym-cta-button">
+                        Join Now
+                        <FaArrowRight className="gym-cta-icon" />
+                    </button>
+                </section>
                 <section className="gym-contact-section">
                     <h2 className="gym-section-title">Location & Contact</h2>
                     <div className="gym-contact-grid reverse">
                         <div className="gym-map-container">
                             <div className="gym-location-header">
-                                <FaMapMarkerAlt className="gym-location-icon" />
-                                <h3 className="gym-location-title">{gymDetails.location.address}</h3>
+                                <div className="location-info">
+                                    <FaMapMarkerAlt className="gym-location-icon" />
+                                    <h3 className="gym-location-title">{gymDetails.location.address}</h3>
+                                </div>
+                                <div className="map-toggle-switch">
+                                    <label className="switch">
+                                        <input
+                                            type="checkbox"
+                                            checked={isMapInteractive}
+                                            onChange={() => setIsMapInteractive(!isMapInteractive)}
+                                        />
+                                        <span className="slider round"></span>
+                                    </label>
+                                    <span className="toggle-label">
+                                        {isMapInteractive ? 'Map Unlocked' : 'Map Locked'}
+                                    </span>
+                                </div>
                             </div>
                             <div className="gym-map">
-                                <GymMap coordinates={gymDetails.location.coordinates} />
+                                <GymMap
+                                    coordinates={gymDetails.location.coordinates}
+                                    isInteractive={isMapInteractive}
+                                />
                             </div>
                         </div>
                         <div className="gym-contact-info">

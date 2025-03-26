@@ -1,9 +1,6 @@
-
-
-
 /* Base styles */
 .landing-page-con {
-  width: 95%;
+  /* width: 100%; */
   margin: 0 auto;
   padding: 0 20px;
   margin-top: 20px;
@@ -41,6 +38,7 @@
   position: relative;
   z-index: 2;
 }
+
 .hero-section h1 {
   font-size: 3.5rem;
   margin-bottom: 30px;
@@ -71,7 +69,7 @@
   color: #333;
   outline: none;
   height: 20px;
-width: 90%;
+  width: 90%;
 }
 
 .search-box input::placeholder {
@@ -158,6 +156,12 @@ section h2::after {
   color: #ffd700;
   margin-right: 5px;
 }
+.loadercard{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+}
 
 .rating {
   display: flex;
@@ -189,7 +193,7 @@ section h2::after {
 .view-details {
   width: 100%;
   padding: 10px;
-  background:#ff4757;
+  background: #ff4757;
   color: white;
   border: none;
   border-radius: 4px;
@@ -202,11 +206,12 @@ section h2::after {
 }
 
 
-.seeall-con{
+.seeall-con {
   text-align: right;
- 
+
 }
-.seeall-con  a{
+
+.seeall-con a {
   text-decoration: none;
   color: #ff4757;
   font-weight: 600;
@@ -214,7 +219,8 @@ section h2::after {
   cursor: pointer;
   margin-right: 25px;
 }
-.seeall-con  a:hover{
+
+.seeall-con a:hover {
   color: #b22b36;
 }
 
@@ -233,21 +239,21 @@ section h2::after {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
-  margin-top: 2rem;
+  /* margin-top: 2rem; */
 }
 
 .nearby-gym-card {
   background: white;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
   position: relative;
 }
 
 .nearby-gym-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .nearby-gym-image {
@@ -350,7 +356,11 @@ section h2::after {
   .hero-section h1 {
     font-size: 2.5rem;
   }
-  section h2{
+  .landing-page-con{
+    padding: 0;
+  }
+
+  section h2 {
     margin: 0;
   }
 
@@ -364,21 +374,23 @@ section h2::after {
   .search-box button {
     border-radius: 15px;
   }
+
   .gyms-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .nearby-gyms-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .nearby-gym-card {
     max-width: 80%;
     margin: 0 auto;
   }
+
   .nearby-gym-info {
     padding: 10px;
-}
+  }
 
 }
 
@@ -386,31 +398,38 @@ section h2::after {
   .hero-section h1 {
     font-size: 2rem;
   }
-  .input-field{
+
+  .input-field {
     width: 70%;
   }
+
   .search-box button {
     width: 98%;
     border-radius: 15px;
   }
-  .city-gyms{
+
+  .city-gyms {
     padding: 0;
   }
-.gyms-grid{
-  padding: 0  ;
-}
-.gym-info{
-  padding: 0  10px;
-  margin-bottom: 0;
-}
-section h2{
-  margin: 0;
-  margin-top: 30px;
-  font-size: 2rem;
-}
-.gym-card {
-  padding: 0;
-}
+
+  .gyms-grid {
+    padding: 0;
+  }
+
+  .gym-info {
+    padding: 0 10px;
+    margin-bottom: 0;
+  }
+
+  section h2 {
+    margin: 0;
+    margin-top: 30px;
+    font-size: 2rem;
+  }
+
+  .gym-card {
+    padding: 0;
+  }
 }
 
 .search-box {

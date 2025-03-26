@@ -135,6 +135,7 @@ export const getLocationDetails = async (latitude, longitude) => {
                 accept: 'application/json'
             }
         });
+        
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;

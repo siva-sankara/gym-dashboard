@@ -10,6 +10,7 @@ import Footer from '../../components/footer/Footer';
 import { Link } from 'react-router-dom';
 import { getApprovedGyms, searchGyms } from '../../apis/apis';
 import { useSelector } from 'react-redux';
+import Loader from '../../utils/Loader';
 
 
 function UserDashBoard() {
@@ -156,7 +157,7 @@ function UserDashBoard() {
 
 
   // console.log(approvedGyms);
-  
+
   const responsive = {
     superLargeDesktop: { breakpoint: { max: 4000, min: 3000 }, items: 5 },
     desktop: { breakpoint: { max: 3000, min: 1024 }, items: 4 },
@@ -206,35 +207,35 @@ function UserDashBoard() {
               {searchResults.gyms.map((gym, index) => (
                 <div key={`search-${gym._id}-${index}`} className="nearby-gym-card">
                   <div className="nearby-gym-image">
-                  <img
-                    src={gym.images && gym.images.length > 0 ? gym.images[0] :
-                      gym.image || 'https://t4.ftcdn.net/jpg/00/99/82/15/240_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg'}
-                    alt={gym.name}
-                  />
-                  <div className="gym-distance">
-                    <FaMapMarkerAlt /> 2.5 km
+                    <img
+                      src={gym.images && gym.images.length > 0 ? gym.images[0] :
+                        gym.image || 'https://t4.ftcdn.net/jpg/00/99/82/15/240_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg'}
+                      alt={gym.name}
+                    />
+                    <div className="gym-distance">
+                      <FaMapMarkerAlt /> 2.5 km
+                    </div>
                   </div>
-                </div>
-                <div className="nearby-gym-info">
-                  <h3>{gym.name}</h3>
-                  <p className="location">{gym.location?.area}, {gym.location?.city}</p>
-                  <div className="rating-price">
-                    <span className="rating">
-                      <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
-                    </span>
-                    <span className="price">{gym.price || 'Price not available'}</span>
-                  </div>
-                  <div className="nearby-facilities">
-                    {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (
-                      <span key={`nearby-${gym._id}-facility-${facilityIndex}`} className="nearby-facility-tag">
-                        {facility}
+                  <div className="nearby-gym-info">
+                    <h3>{gym.name}</h3>
+                    <p className="location">{gym.location?.area}, {gym.location?.city}</p>
+                    <div className="rating-price">
+                      <span className="rating">
+                        <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
                       </span>
-                    ))}
+                      <span className="price">{gym.price || 'Price not available'}</span>
+                    </div>
+                    <div className="nearby-facilities">
+                      {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (
+                        <span key={`nearby-${gym._id}-facility-${facilityIndex}`} className="nearby-facility-tag">
+                          {facility}
+                        </span>
+                      ))}
+                    </div>
+                    <Link to={`/gym/${gym._id}`} className="nearby-view-details">
+                      View Details
+                    </Link>
                   </div>
-                  <Link to={`/gym/${gym._id}`} className="nearby-view-details">
-                    View Details
-                  </Link>
-                </div>
                 </div>
               ))}
             </div>
@@ -253,55 +254,148 @@ function UserDashBoard() {
         )}
 
 
-
-
-
-
         <section className="city-gyms">
           <div className="head-seeall-con">
             <h2>Top Gyms in {selectedCity}</h2>
             <p className='seeall-con'><Link>Explore More Gyms</Link></p>
           </div>
           <div className="gyms-grid">
-            <Carousel
-              responsive={responsive}
-              infinite={false}
-              autoPlay={false}
-              swipeable={true}
-              draggable={true}
-              shouldResetAutoplay={true}
-              rewind={false}
-              rewindWithAnimation={false}
-              partialVisible={false}
-              afterChange={(previousSlide, { currentSlide }) => {
-                // Check if we're near the end of the carousel
-                const totalItems = approvedGyms.length;
-                const visibleItems = 4; // desktop view shows 4 items
-                if (currentSlide >= totalItems - visibleItems && hasMore) {
-                  handleLoadMore();
-                }
-              }}
-              customTransition="transform 300ms ease-in-out"
-            >
-              {approvedGyms.map((gym, index) => (
-                <div key={`${gym._id}-${index}`} className="gym-card">
-                  <div className="gym-image">
+            {loading ? (
+              <Carousel responsive={responsive}>
+                {Array(4).fill(0).map((_, index) => (
+                  <div key={`loader-${index}`} className="gym-card loadercard" style={{ minHeight: '350px' }}>
+                    <Loader
+                      height="100%"
+                      backgroundColor="rgba(255, 255, 255, 0.53)"
+                      dotSize="5px"
+                      dotColor="rgba(87, 82, 82, 0.69)"
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            ) : approvedGyms.length === 0 ? (
+              <div className="no-gyms-message" style={{
+                textAlign: 'center',
+                padding: '2rem',
+                color: '#666',
+                // backgroundColor: '#f5f5f5',
+                borderRadius: '8px',
+                margin: '1rem 0'
+              }}>
+                <h3>No Gyms Available</h3>
+                <p>There are currently no gyms listed in this area.</p>
+              </div>
+            ) : (
+              <Carousel
+                responsive={responsive}
+                infinite={false}
+                autoPlay={false}
+                swipeable={true}
+                draggable={true}
+                shouldResetAutoplay={true}
+                rewind={false}
+                rewindWithAnimation={false}
+                partialVisible={false}
+                afterChange={(previousSlide, { currentSlide }) => {
+                  const totalItems = approvedGyms.length;
+                  const visibleItems = 4;
+                  if (currentSlide >= totalItems - visibleItems && hasMore) {
+                    handleLoadMore();
+                  }
+                }}
+                customTransition="transform 300ms ease-in-out"
+              >
+                {approvedGyms.map((gym, index) => (
+                  <div key={`${gym._id}-${index}`} className="gym-card">
+                    <div className="gym-image">
+                      <img
+                        src={gym.images && gym.images.length > 0 ? gym.images[0] :
+                          gym.image || 'https://t4.ftcdn.net/jpg/00/99/82/15/240_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg'}
+                        alt={gym.name}
+                      />
+                    </div>
+                    <div className="gym-info">
+                      <h3>{gym.name}</h3>
+                      <p><FaMapMarkerAlt /> {gym.location?.area}, {gym.location?.city}</p>
+                      <div className="rating">
+                        <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
+                      </div>
+                      <div className="price">{gym.price || 'Price not available'}</div>
+                      <div className="facilities">
+                        {(gym.facilities || []).slice(0, 3).map((facility, facilityIndex) => (
+                          <span key={`${gym._id}-facility-${facilityIndex}`} className="facility-tag">
+                            {facility}
+                          </span>
+                        ))}
+                      </div>
+                      <Link to={`/user-dashboard/gym/${gym._id}`}>
+                        <button className="view-details">View Details</button>
+                      </Link>
+                    </div>
+                  </div>
+                ))}
+              </Carousel>
+
+            )}
+          </div>
+        </section>
+
+
+
+        <section className="nearby-gyms">
+  <div className="head-seeall-con">
+    <h2>Nearby Gyms in {selectedCity}</h2>
+    <p className='seeall-con'><Link>View All</Link></p>
+  </div>
+  <div className="nearby-gyms-grid">
+    {loading ? (
+      Array(4).fill(0).map((_, index) => (
+        <div key={`loader-${index}`} className="gym-card loadercard" style={{ minHeight: '350px' }}>
+          <Loader
+            height="100%"
+            backgroundColor="rgba(255, 255, 255, 0.53)"
+            dotSize="20px"
+            dotColor="rgba(87, 82, 82, 0.69)"
+          />
+        </div>
+      ))
+    ) : approvedGyms.length === 0 ? (
+      <div className="no-gyms-message" style={{
+        textAlign: 'center',
+        padding: '2rem',
+        color: '#666',
+        borderRadius: '8px',
+        margin: '1rem 0',
+        width: '100%'
+      }}>
+        <h3>No Gyms Available</h3>
+        <p>There are currently no gyms listed in this area.</p>
+      </div>
+    ) : (
+      approvedGyms.slice(0, 4).map((gym, index) => (
+                <div key={`nearby-${gym._id}-${index}`} className="nearby-gym-card">
+                  <div className="nearby-gym-image">
                     <img
                       src={gym.images && gym.images.length > 0 ? gym.images[0] :
                         gym.image || 'https://t4.ftcdn.net/jpg/00/99/82/15/240_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg'}
                       alt={gym.name}
                     />
-                  </div>
-                  <div className="gym-info">
-                    <h3>{gym.name}</h3>
-                    <p><FaMapMarkerAlt /> {gym.location?.area}, {gym.location?.city}</p>
-                    <div className="rating">
-                      <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
+                    <div className="gym-distance">
+                      <FaMapMarkerAlt /> 2.5 km
                     </div>
-                    <div className="price">{gym.price || 'Price not available'}</div>
-                    <div className="facilities">
-                      {(gym.facilities || []).slice(0, 3).map((facility, facilityIndex) => (
-                        <span key={`${gym._id}-facility-${facilityIndex}`} className="facility-tag">
+                  </div>
+                  <div className="nearby-gym-info">
+                    <h3>{gym.name}</h3>
+                    <p className="location">{gym.location?.area}, {gym.location?.city}</p>
+                    <div className="rating-price">
+                      <span className="rating">
+                        <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
+                      </span>
+                      <span className="price">{gym.price || 'Price not available'}</span>
+                    </div>
+                    <div className="nearby-facilities">
+                      {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (
+                        <span key={`nearby-${gym._id}-facility-${facilityIndex}`} className="nearby-facility-tag">
                           {facility}
                         </span>
                       ))}
@@ -311,53 +405,7 @@ function UserDashBoard() {
                     </Link>
                   </div>
                 </div>
-              ))}
-            </Carousel>
-          </div>
-        </section>
-
-
-
-        <section className="nearby-gyms">
-          <div className="head-seeall-con">
-            <h2>Nearby Gyms in {selectedCity}</h2>
-            <p className='seeall-con'><Link>View All</Link></p>
-          </div>
-          <div className="nearby-gyms-grid">
-            {approvedGyms.slice(0, 4).map((gym, index) => (
-              <div key={`nearby-${gym._id}-${index}`} className="nearby-gym-card">
-                <div className="nearby-gym-image">
-                  <img
-                    src={gym.images && gym.images.length > 0 ? gym.images[0] :
-                      gym.image || 'https://t4.ftcdn.net/jpg/00/99/82/15/240_F_99821575_nVEHTBXzUnTcLIKN6yOymAWAnFwEybGb.jpg'}
-                    alt={gym.name}
-                  />
-                  <div className="gym-distance">
-                    <FaMapMarkerAlt /> 2.5 km
-                  </div>
-                </div>
-                <div className="nearby-gym-info">
-                  <h3>{gym.name}</h3>
-                  <p className="location">{gym.location?.area}, {gym.location?.city}</p>
-                  <div className="rating-price">
-                    <span className="rating">
-                      <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
-                    </span>
-                    <span className="price">{gym.price || 'Price not available'}</span>
-                  </div>
-                  <div className="nearby-facilities">
-                    {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (
-                      <span key={`nearby-${gym._id}-facility-${facilityIndex}`} className="nearby-facility-tag">
-                        {facility}
-                      </span>
-                    ))}
-                  </div>
-                  <Link to={`/user-dashboard/gym/${gym._id}`}>
-                      <button className="view-details">View Details</button>
-                    </Link>
-                </div>
-              </div>
-            ))}
+              )))}
           </div>
         </section>
 
