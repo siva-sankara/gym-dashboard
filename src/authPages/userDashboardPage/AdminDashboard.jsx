@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaGym, FaUsers, FaDumbbell, FaChartLine, FaSearch, FaFilter } from 'react-icons/fa';
+import {  FaUsers, FaDumbbell, FaChartLine, FaSearch } from 'react-icons/fa';
 import './AdminDashboard.css';
 import { Link } from 'react-router-dom';
 

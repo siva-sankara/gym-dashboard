@@ -3,7 +3,7 @@ import "./GymDetails.css";
 import { useParams } from "react-router-dom";
 import { getGymById } from "../../apis/apis";
 import {
-    FaPhone, FaEnvelope, FaGlobe, FaMapMarkerAlt, FaClock, FaParking,
+    FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaParking,
     FaShower,
     FaWifi,
     FaDumbbell,
@@ -15,7 +15,6 @@ import {
     FaExclamationCircle
 } from 'react-icons/fa';
 import GymMap from "../maps/GymMap";
-import Footer from "../footer/Footer";
 import Loader from "../../utils/Loader";
 
 

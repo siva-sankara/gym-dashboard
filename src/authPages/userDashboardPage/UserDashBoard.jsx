@@ -47,7 +47,9 @@ function UserDashBoard() {
 
   const fetchApprovedGyms = async (page) => {
     try {
-      setLoading(true);
+      if (page === 1) {
+        setLoading(true);
+      }
       const result = await getApprovedGyms(page, 5);
       if (!result.data.gyms || result.data.gyms.length === 0) {
         setHasMore(false);
@@ -259,7 +261,7 @@ function UserDashBoard() {
             <h2>Top Gyms in {selectedCity}</h2>
             <p className='seeall-con'><Link>Explore More Gyms</Link></p>
           </div>
-          <div className="gyms-grid">
+          <div className="gyms-grid ">
             {loading ? (
               <Carousel responsive={responsive}>
                 {Array(4).fill(0).map((_, index) => (
@@ -343,36 +345,36 @@ function UserDashBoard() {
 
 
         <section className="nearby-gyms">
-  <div className="head-seeall-con">
-    <h2>Nearby Gyms in {selectedCity}</h2>
-    <p className='seeall-con'><Link>View All</Link></p>
-  </div>
-  <div className="nearby-gyms-grid">
-    {loading ? (
-      Array(4).fill(0).map((_, index) => (
-        <div key={`loader-${index}`} className="gym-card loadercard" style={{ minHeight: '350px' }}>
-          <Loader
-            height="100%"
-            backgroundColor="rgba(255, 255, 255, 0.53)"
-            dotSize="20px"
-            dotColor="rgba(87, 82, 82, 0.69)"
-          />
-        </div>
-      ))
-    ) : approvedGyms.length === 0 ? (
-      <div className="no-gyms-message" style={{
-        textAlign: 'center',
-        padding: '2rem',
-        color: '#666',
-        borderRadius: '8px',
-        margin: '1rem 0',
-        width: '100%'
-      }}>
-        <h3>No Gyms Available</h3>
-        <p>There are currently no gyms listed in this area.</p>
-      </div>
-    ) : (
-      approvedGyms.slice(0, 4).map((gym, index) => (
+          <div className="head-seeall-con">
+            <h2>Nearby Gyms in {selectedCity}</h2>
+            <p className='seeall-con'><Link>View All</Link></p>
+          </div>
+          <div className="nearby-gyms-grid">
+            {loading ? (
+              Array(4).fill(0).map((_, index) => (
+                <div key={`loader-${index}`} className="gym-card loadercard" style={{ minHeight: '350px' }}>
+                  <Loader
+                    height="100%"
+                    backgroundColor="rgba(255, 255, 255, 0.53)"
+                    dotSize="20px"
+                    dotColor="rgba(87, 82, 82, 0.69)"
+                  />
+                </div>
+              ))
+            ) : approvedGyms.length === 0 ? (
+              <div className="no-gyms-message" style={{
+                textAlign: 'center',
+                padding: '2rem',
+                color: '#666',
+                borderRadius: '8px',
+                margin: '1rem auto',
+                width: '90%'
+              }}>
+                <h3>No Gyms Available</h3>
+                <p>There are currently no gyms listed in this area.</p>
+              </div>
+            ) : (
+              approvedGyms.slice(0, 4).map((gym, index) => (
                 <div key={`nearby-${gym._id}-${index}`} className="nearby-gym-card">
                   <div className="nearby-gym-image">
                     <img
@@ -391,7 +393,7 @@ function UserDashBoard() {
                       <span className="rating">
                         <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
                       </span>
-                      <span className="price">{gym.price || 'Price not available'}</span>
+                      <span className="prices">{gym.price || 'Price not available'}</span>
                     </div>
                     <div className="nearby-facilities">
                       {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (

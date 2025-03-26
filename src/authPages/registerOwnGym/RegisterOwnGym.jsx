@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { getLocationDetails, registerGym } from '../../apis/apis';
 import './RegisterOwnGym.css';
 import { showToast } from '../../components/toast/Toast';
-import { FaGym, FaMapMarkerAlt, FaPhone, FaCopy, FaSearch, FaGlobe, FaBusinessTime, FaClock } from 'react-icons/fa';
+import {  FaMapMarkerAlt, FaPhone, FaCopy, FaBusinessTime, FaClock } from 'react-icons/fa';
 import { getLocationFromAddress } from '../../utils/locationUtils';
+import { useNavigate } from 'react-router-dom';
 const initialFormData = {
     name: '',
     description: '',
@@ -42,6 +43,7 @@ const initialFormData = {
     }
 }
 const RegisterOwnGym = () => {
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [bulkTiming, setBulkTiming] = useState({ open: '06:00', close: '22:00' });
     const [selectedDays, setSelectedDays] = useState([]);
@@ -103,13 +105,38 @@ const RegisterOwnGym = () => {
             }
 
             // Proceed with gym registration
-            await registerGym(formData);
-            showToast({
-                type: 'success',
-                message: 'Gym registered successfully!',
-                playSound: true
-            });
-            setFormData(initialFormData);
+            const response = await registerGym(formData);
+            if (response && response.data && response.data?.gym?._id) {
+                navigate('/user-dashboard/payment', {
+                    state: {
+                        gymId: response.data?.gym?._id, // Use the correct path to gym ID
+                        gymName: formData.name,
+                        subscriptionPlans: [
+                            {
+                                name: 'Basic',
+                                amount: 999,
+                                duration: '1 month',
+                                features: ['Basic listing', 'Email support']
+                            },
+                            {
+                                name: 'Premium',
+                                amount: 2999,
+                                duration: '3 months',
+                                features: ['Featured listing', 'Priority support', 'Analytics']
+                            },
+                            {
+                                name: 'Pro',
+                                amount: 4999,
+                                duration: '6 months',
+                                features: ['Premium listing', '24/7 support', 'Advanced Analytics', 'Marketing Tools']
+                            }
+                        
+                        ]
+                    }
+                });
+            } else {
+                throw new Error('Invalid response from server');
+            }
         } catch (error) {
             showToast({
                 type: 'error',

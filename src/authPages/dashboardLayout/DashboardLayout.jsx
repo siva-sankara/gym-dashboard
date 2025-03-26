@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AuthNavbar from '../authNavbar/AuthNavbar';
 import './DashboardLayout.css';
-import { useNavigate } from 'react-router-dom';
 import { showToast } from '../../components/toast/Toast';
 
 const DashboardLayout = ({ children }) => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const logoutButtonRef = useRef(null);
   const cancelButtonRef = useRef(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (showLogoutModal && logoutButtonRef.current) {

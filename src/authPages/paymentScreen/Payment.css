@@ -1,21 +1,164 @@
+.payment-screen {
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #f5f5f5;
+}
+
 .payment-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.payment-container h2 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.gym-name {
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.subscription-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.plan-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.plan-card.selected {
+    border: 2px solid #3887be;
+}
+
+.plan-card.popular {
+    border: 2px solid #ffd700;
+}
+
+.popular-tag {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: #ffd700;
+    color: #333;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 20px;
+    gap: 5px;
+}
+
+.price {
+    margin: 1.5rem 0;
+    font-size: 2.5rem;
+    color: #333;
+    font-weight: bold;
+}
+
+.currency {
+    font-size: 1.5rem;
+    vertical-align: super;
+}
+
+.duration {
+    font-size: 1rem;
+    color: #666;
+}
+
+.features {
+    text-align: left;
+    margin: 1.5rem 0;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.8rem;
+    color: #555;
+}
+
+.feature svg {
+    color: #3887be;
+}
+
+.select-plan-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #3887be;
+    border-radius: 6px;
+    background: transparent;
+    color: #3887be;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select-plan-btn:hover, .select-plan-btn.selected {
+    background: #3887be;
+    color: white;
 }
 
 .payment-button {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
     background-color: #3887be;
     color: white;
-    padding: 12px 24px;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 300px;
 }
 
-.payment-button:hover {
+.payment-button:hover:not(:disabled) {
     background-color: #2d6a9f;
+}
+
+.payment-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.payment-error {
+    text-align: center;
+    color: #dc3545;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .payment-screen {
+        padding: 1rem;
+    }
+
+    .subscription-plans {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-card {
+        padding: 1.5rem;
+    }
+
+    .price {
+        font-size: 2rem;
+    }
 }

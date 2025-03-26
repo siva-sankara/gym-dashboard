@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaStar, FaMapMarkerAlt, FaPhone, FaUtensils, FaPlay, FaArrowRight, 
+import { FaStar, FaMapMarkerAlt, FaPlay, 
   FaDumbbell, FaMedal, FaTrophy, FaHeartbeat, FaRunning, FaFire } from 'react-icons/fa';
   import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';

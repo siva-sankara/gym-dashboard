@@ -22,6 +22,7 @@ import NearByGyms from './authPages/nearbyGyms/NearByGyms'
 import ToDoCalendar from './authPages/todosList/ToDoCalendar'
 import RegisterOwnGym from './authPages/registerOwnGym/RegisterOwnGym'
 import GymDetails from './components/gymDetails/GymDetails'
+import Payment from './authPages/paymentScreen/Payment'
 
 
 function RoutesPage() {
@@ -141,6 +142,8 @@ function RoutesPage() {
                   <Route path="to-dos" element={<ToDoCalendar />} />
                   <Route path="register-gym" element={<RegisterOwnGym />} />
                   <Route path="gym/:gymId" element={<GymDetails />} />
+                  <Route path="payment" element={<Payment />} />
+                  <Route path="payment/:gymId" element={<Payment />} />
                 </Routes>
               </DashboardLayout>
             </ProtectedLayout>
