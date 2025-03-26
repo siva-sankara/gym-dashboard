@@ -5,13 +5,7 @@ import { MdEmail, MdLocationOn, MdPhone } from 'react-icons/md'
 import './Footer.css'
 
 function Footer() {
-  const year = new Date().getFullYear()
-  const nearbyGyms = [
-    "FitZone - 0.5km",
-    "PowerHouse - 1.2km",
-    "Elite Fitness - 2.0km",
-  ]
-
+  const year = new Date().getFullYear();
   return (
     <footer>
       <div className="footer__container">

@@ -1,91 +1,166 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Payment.css';
+import { showToast } from '../../components/toast/Toast';
+import { FaCheck, FaCrown } from 'react-icons/fa';
+import { createGymPaymentOrder, verifyGymPayment } from '../../apis/apis';
 
-const Payment = ({ amount, planName, onSuccess, onFailure }) => {
+const Payment = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [loading, setLoading] = useState(false);
+    const { gymId, gymName, subscriptionPlans } = location.state || {};
+    const [selectedPlan, setSelectedPlan] = useState(null);
 
-    const loadScript = (src) => {
-        return new Promise((resolve) => {
-            const script = document.createElement('script');
-            script.src = src;
-            script.onload = () => resolve(true);
-            script.onerror = () => resolve(false);
-            document.body.appendChild(script);
+    useEffect(() => {
+        console.log('Environment Variables:', {
+            key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+            nodeEnv: process.env.NODE_ENV
         });
-    };
+        const loadRazorpay = async () => {
+            const script = document.createElement('script');
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            document.body.appendChild(script);
+        };
+        loadRazorpay();
+    }, []);
 
-    const displayRazorpay = async () => {
-        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-
-        if (!res) {
-            alert('Razorpay SDK failed to load');
+    const handlePayment = async () => {
+        if (!selectedPlan) {
+            showToast({
+                type: 'warning',
+                message: 'Please select a subscription plan',
+                playSound: true
+            });
             return;
         }
 
-        // Replace with your actual API call to get order details from backend
-        const orderData = await fetch('your-backend-api/create-order', {
-            method: 'POST',
-            body: JSON.stringify({
-                amount: amount * 100, // Razorpay expects amount in paise
-                planName: planName
-            }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(t => t.json());
+        setLoading(true);
+        try {
+            const orderResponse = await createGymPaymentOrder(
+                gymId,
+                selectedPlan.amount * 100
+            );
 
-        const options = {
-            key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-            amount: amount * 100,
-            currency: "INR",
-            name: "Gym Dashboard",
-            description: `Payment for ${planName} Plan`,
-            order_id: orderData.id,
-            handler: async function (response) {
-                try {
-                    // Verify payment with backend
-                    const verifyData = await fetch('your-backend-api/verify-payment', {
-                        method: 'POST',
-                        body: JSON.stringify({
-                            razorpay_payment_id: response.razorpay_payment_id,
+            if (!orderResponse.success) {
+                throw new Error(orderResponse.message || 'Failed to create order');
+            }
+
+            const options = {
+                key: orderResponse.data.key,
+                amount: orderResponse.data.amount,
+                currency: orderResponse.data.currency,
+                name: orderResponse.data.name,
+                description: orderResponse.data.description,
+                order_id: orderResponse.data.razorpay_order_id,
+                handler: async (response) => {
+                    try {
+
+                        const verifyData = await verifyGymPayment({
                             razorpay_order_id: response.razorpay_order_id,
-                            razorpay_signature: response.razorpay_signature
-                        }),
-                        headers: {
-                            'Content-Type': 'application/json'
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            gymId: gymId
+                        });
+                        console.log(verifyData);
+
+                        if (verifyData.success) {
+                            showToast({
+                                type: 'success',
+                                message: 'Payment successful!',
+                                playSound: true
+                            });
+                            navigate('/user-dashboard');
                         }
-                    }).then(t => t.json());
-
-                    if (verifyData.success) {
-                        onSuccess(response);
-                        navigate('/payment-success');
-                    } else {
-                        onFailure('Payment verification failed');
+                    } catch (error) {
+                        showToast({
+                            type: 'error',
+                            message: 'Payment verification failed',
+                            playSound: true
+                        });
                     }
-                } catch (error) {
-                    onFailure(error.message);
+                },
+                prefill: orderResponse.data.prefill,
+                theme: {
+                    color: "#3887be"
+                },
+                modal: {
+                    ondismiss: function () {
+                        showToast({
+                            type: 'warning',
+                            message: 'Payment cancelled',
+                            playSound: true
+                        });
+                        setLoading(false);
+                    }
                 }
-            },
-            prefill: {
-                name: "User Name",
-                email: "user@example.com",
-                contact: "9999999999"
-            },
-            theme: {
-                color: "#3887be"
-            }
-        };
+            };
 
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.open();
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+
+        } catch (error) {
+            showToast({
+                type: 'error',
+                message: error.message || 'Failed to initialize payment',
+                playSound: true
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
+
+    if (!subscriptionPlans) {
+        return <div className="payment-error">Invalid payment details</div>;
+    }
+
     return (
-        <div className="payment-container">
-            <button onClick={displayRazorpay} className="payment-button">
-                Pay ₹{amount}
-            </button>
+        <div className="payment-screen">
+            <div className="payment-container">
+                <h2>Choose Your Subscription Plan</h2>
+                <p className="gym-name">for {gymName}</p>
+
+                <div className="subscription-plans">
+                    {subscriptionPlans.map((plan, index) => (
+                        <div
+                            key={plan.name}
+                            className={`plan-card ${selectedPlan?.name === plan.name ? 'selected' : ''} ${plan.name === 'Premium' ? 'popular' : ''}`}
+                            onClick={() => setSelectedPlan(plan)}
+                        >
+                            {plan.name === 'Premium' && <div className="popular-tag"><FaCrown /> Popular</div>}
+                            <h3>{plan.name}</h3>
+                            <div className="price">
+                                <span className="currency">₹</span>
+                                <span className="amount">{plan.amount}</span>
+                                <span className="duration">/{plan.duration}</span>
+                            </div>
+                            <div className="features">
+                                {plan.features.map((feature, i) => (
+                                    <div key={i} className="feature">
+                                        <FaCheck /> {feature}
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                className={`select-plan-btn ${selectedPlan?.name === plan.name ? 'selected' : ''}`}
+                                onClick={() => setSelectedPlan(plan)}
+                            >
+                                {selectedPlan?.name === plan.name ? 'Selected' : 'Select Plan'}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                <button
+                    onClick={handlePayment}
+                    className="payment-button"
+                    disabled={loading || !selectedPlan}
+                >
+                    {loading ? 'Processing...' : `Pay ₹${selectedPlan?.amount || '0'}`}
+                </button>
+            </div>
         </div>
     );
 };

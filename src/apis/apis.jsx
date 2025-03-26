@@ -255,5 +255,29 @@ export const getGymById = async (gymId) => {
 };
 
 
+// payment creation method
+export const createGymPaymentOrder = async (gymId, amount, currency = "INR") => {
+    try {
+        const response = await api.post(`/payment/gym-registration/${gymId}`, {
+            amount,
+            currency,
+            keyId: process.env.REACT_APP_RAZORPAY_KEY_ID
+        });
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || new Error('Failed to create payment order');
+    }
+};
+
+// payment verification method
+export const verifyGymPayment = async (paymentDetails) => {
+    try {
+        const response = await api.post('/payment/verify-payment', paymentDetails);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || new Error('Payment verification failed');
+    }
+};
+
 export default api;
 

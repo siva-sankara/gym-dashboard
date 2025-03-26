@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import {
   FaDumbbell,
   FaUsers,
@@ -106,7 +106,6 @@ const AuthNavbar = ({ onLogout }) => {
           { to: '/workout-plans', icon: <FaClipboardList />, text: 'Workout Plans' },
           { to: '/profile', icon: <FaUserCog />, text: 'Profile' }
         ];
-      case 'user':
       case 'user':
         return [
           { to: '/user-dashboard', icon: <FaChartLine />, text: 'Dashboard' },

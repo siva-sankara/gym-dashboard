@@ -1,9 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { FaCalendarAlt, FaClock, FaBell, FaCheck, FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
+import {  FaClock, FaTrash, FaEdit, FaPlus } from 'react-icons/fa';
 import './ToDoCalendar.css';
-import { createTodo, deleteTodo, getCalendarTodos, updateTodo, getTodosByDate } from '../../apis/apis';
-import { ToastContainer, toast } from 'react-toastify';
+import { createTodo, deleteTodo, getCalendarTodos, updateTodo } from '../../apis/apis';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { showToast } from '../../components/toast/Toast';
 
@@ -103,7 +103,7 @@ const ToDoCalendar = () => {
   const handleToggleTodo = async (todoId, completed) => {
     try {
       setLoading(true);
-      const res = await updateTodo(todoId, { completed: !completed });
+      await updateTodo(todoId, { completed: !completed });
       await fetchMonthTodos();
       setError(null);
 
