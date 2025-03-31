@@ -49,7 +49,7 @@ function RoutesPage() {
     switch (userRole) {
       case 'admin':
         return '/admin-dashboard';
-      case 'owner':
+      case 'gym_owner':
         return '/owner-dashboard';
       default:
         return '/user-dashboard';

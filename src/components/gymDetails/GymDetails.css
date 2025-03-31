@@ -31,7 +31,7 @@
   left: 0;
   right: 0;
   color: white;
-  padding: 6rem 3rem 3rem;
+  /* padding: 6rem 3rem 3rem; */
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.7) 30%, rgba(0, 0, 0, 0.95));
   z-index: 2;
 }
@@ -139,7 +139,7 @@
   background: #1a1a1a;
   border-radius: 16px;
   padding: 2rem;
-  margin-bottom: 3rem;
+  /* margin-bottom: 3rem; */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -752,6 +752,132 @@
   color: #fffbfb;
   min-width: 85px;
 }
+.gym-hours-section {
+  padding:  2rem;
+  background: #1a1a1a;
+  border-radius: 16px;
+  /* margin-bottom: 4rem; */
+}
+
+.gym-hours-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.gym-hours-card {
+  background: #242424;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.gym-hours-card:hover {
+  transform: translateY(-5px);
+  background: #2a2a2a;
+}
+
+.gym-hours-day {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.gym-hours-time {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ff3547;
+}
+
+.gym-hours-icon {
+  font-size: 1rem;
+}
+
+.gym-hero-info-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  /* max-width: 1400px; */
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.gym-hero-main-info {
+  flex: 1;
+  max-width: 60%;
+}
+
+.gym-hero-reviews {
+  flex: 1;
+  max-width: 40%;
+  max-height: 45vh;
+  overflow: hidden;
+  position: relative;
+  padding: 1rem;
+}
+
+.gym-review-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  animation: floatUp 15s linear infinite;
+  opacity: 0;
+}
+
+.gym-reviews-title {
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  display: none;
+}
+
+.gym-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.gym-review-author {
+  color: #fff;
+  font-weight: 500;
+}
+
+.gym-review-rating {
+  color: #ff3547;
+  font-weight: 600;
+}
+
+.gym-review-text {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+@keyframes floatUp {
+  0% {
+      transform: translateY(100%);
+      opacity: 0;
+  }
+  10% {
+      opacity: 1;
+  }
+  90% {
+      opacity: 1;
+  }
+  100% {
+      transform: translateY(-100%);
+      opacity: 0;
+  }
+}
+
 
 @media (max-width: 1024px) {
   .gym-hero-content {
@@ -841,6 +967,43 @@
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
   }
+  .gym-hours-section {
+    padding: 2rem 1rem;
+    margin: 0;
+}
+
+.gym-hours-grid {
+    grid-template-columns: 1fr;
+}
+
+.gym-hours-card {
+    padding: 1rem;
+   
+}
+
+.gym-hero-info-container {
+  flex-direction: column;
+}
+
+.gym-hero-main-info,
+.gym-hero-reviews {
+  max-width: 100%;
+}
+
+.gym-hero-reviews {
+  max-height: 30vh;
+}
+.gym-reviews-title.mobile-only {
+  display: block;
+  text-align: center;
+  padding: 1rem 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+.gym-hero-info-container{
+  gap: 0;
+}
 }
 
 @media (max-width: 480px) {

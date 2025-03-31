@@ -112,6 +112,7 @@ const GymDetails = () => {
             fetchGymDetails();
         }
     }, [gymId]);
+    console.log(gymDetails);
 
     if (loading) return <Loader text="Loading gym details..." height="100vh" />;
     if (error) return (
@@ -126,7 +127,44 @@ const GymDetails = () => {
             <p>Gym not found</p>
         </div>
     );
-
+    const dummyReviews = [
+        {
+            userName: "Sarah Johnson",
+            rating: 5,
+            comment: "Amazing facilities and professional trainers! The 24/7 access is perfect for my schedule.",
+            date: "2023-11-15"
+        },
+        {
+            userName: "Mike Chen",
+            rating: 4.5,
+            comment: "Great equipment and friendly staff. The yoga classes are exceptional.",
+            date: "2023-11-10"
+        },
+        {
+            userName: "Emily Davis",
+            rating: 5,
+            comment: "Best gym in the area! Love the clean environment and variety of equipment.",
+            date: "2023-11-05"
+        },
+        {
+            userName: "Alex Thompson",
+            rating: 4,
+            comment: "Excellent personal training programs. Have seen great results in just 2 months.",
+            date: "2023-11-01"
+        },
+        {
+            userName: "Rachel Kim",
+            rating: 5,
+            comment: "The spa facilities are top-notch. Perfect after an intense workout session.",
+            date: "2023-10-28"
+        },
+        {
+            userName: "David Wilson",
+            rating: 4.5,
+            comment: "Modern equipment and great atmosphere. The group classes are very motivating.",
+            date: "2023-10-25"
+        }
+    ];
     return (
         <div className="gym-details-wrapper">
             <div className="gym-hero-banner">
@@ -138,26 +176,40 @@ const GymDetails = () => {
                     />
                 ))}
                 <div className="gym-hero-content">
-                    <div className="gym-hero-main-info">
-                        <h1 className="gym-hero-title">{gymDetails.name}</h1>
-                        <div className="gym-hero-metadata">
-                            <p className="gym-hero-status">{gymDetails.status}</p>
-                            <span className="gym-hero-dot">•</span>
-                            <span className="gym-hero-location">
-                                <FaMapMarkerAlt className="gym-hero-icon" />
-                                {gymDetails.location.city}
-                            </span>
+                    <div className="gym-hero-info-container">
+                        <div className="gym-hero-main-info">
+                            <h1 className="gym-hero-title">{gymDetails.name}</h1>
+                            <div className="gym-hero-metadata">
+                                <p className="gym-hero-status">{gymDetails.status}</p>
+                                <span className="gym-hero-dot">•</span>
+                                <span className="gym-hero-location">
+                                    <FaMapMarkerAlt className="gym-hero-icon" />
+                                    {gymDetails.location.city}
+                                </span>
+                            </div>
+                            <p className="gym-hero-description">{gymDetails.description}</p>
+                            <div className="gym-hero-stats">
+                                <div className="gym-hero-stat">
+                                    <FaDumbbell className="gym-hero-icon" />
+                                    <span>{gymDetails.facilities.length} Facilities</span>
+                                </div>
+                                <div className="gym-hero-stat">
+                                    <FaClock className="gym-hero-icon" />
+                                    <span>24/7 Access</span>
+                                </div>
+                            </div>
                         </div>
-                        <p className="gym-hero-description">{gymDetails.description}</p>
-                        <div className="gym-hero-stats">
-                            <div className="gym-hero-stat">
-                                <FaDumbbell className="gym-hero-icon" />
-                                <span>{gymDetails.facilities.length} Facilities</span>
-                            </div>
-                            <div className="gym-hero-stat">
-                                <FaClock className="gym-hero-icon" />
-                                <span>24/7 Access</span>
-                            </div>
+                        <div className="gym-hero-reviews">
+                            <h2 className="gym-reviews-title mobile-only">Member Reviews</h2>
+                            {dummyReviews?.map((review, index) => (
+                                <div key={index} className="gym-review-card" style={{animationDelay: `${index * 0.2}s`}}>
+                                    <div className="gym-review-header">
+                                        <span className="gym-review-author">{review.userName}</span>
+                                        <span className="gym-review-rating">★ {review.rating}</span>
+                                    </div>
+                                    <p className="gym-review-text">{review.comment}</p>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
@@ -183,6 +235,22 @@ const GymDetails = () => {
                                 </div>
                             );
                         })}
+                    </div>
+                </section>
+                <section className="gym-hours-section">
+                    <h2 className="gym-section-title">Opening Hours</h2>
+                    <div className="gym-hours-grid">
+                        {Object.entries(gymDetails.operatingHours).map(([day, hours]) => (
+                            <div key={day} className="gym-hours-card">
+                                <div className="gym-hours-day">
+                                    {day.charAt(0).toUpperCase() + day.slice(1)}
+                                </div>
+                                <div className="gym-hours-time">
+                                    <FaClock className="gym-hours-icon" />
+                                    <span>{hours.open} - {hours.close}</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </section>
                 <section className="gym-plans-section">

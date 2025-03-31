@@ -89,8 +89,9 @@ const RegisterOwnGym = () => {
                     formData.location.coordinates = {
                         type: 'Point',
                         coordinates: [
+                            locationData.coordinates.latitude   ,
                             locationData.coordinates.longitude,  // Longitude first
-                            locationData.coordinates.latitude    // Latitude second
+                             // Latitude second
                         ]
                     };
                 } catch (error) {
