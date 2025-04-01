@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './Payment.css';
 import { showToast } from '../../components/toast/Toast';
 import { FaCheck, FaCrown } from 'react-icons/fa';
-import { createGymPaymentOrder, verifyGymPayment } from '../../apis/apis';
+import { createGymPaymentOrder, getUserById, verifyGymPayment } from '../../apis/apis';
 
 const Payment = () => {
     const navigate = useNavigate();
@@ -64,8 +64,9 @@ const Payment = () => {
                             gymId: gymId
                         });
                         console.log(verifyData);
-
+                        
                         if (verifyData.success) {
+                            localStorage.setItem('userRole','gym_owner');
                             showToast({
                                 type: 'success',
                                 message: 'Payment successful!',
@@ -131,12 +132,12 @@ const Payment = () => {
                         >
                             {plan.name === 'Premium' && <div className="popular-tag"><FaCrown /> Popular</div>}
                             <h3>{plan.name}</h3>
-                            <div className="price">
+                            <div className="prices">
                                 <span className="currency">₹</span>
                                 <span className="amount">{plan.amount}</span>
                                 <span className="duration">/{plan.duration}</span>
                             </div>
-                            <div className="features">
+                            <div className="features-list-f">
                                 {plan.features.map((feature, i) => (
                                     <div key={i} className="feature">
                                         <FaCheck /> {feature}

@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './SignUp.css';
 import { useDispatch } from 'react-redux';
 import { sendOTP, signup } from '../../apis/apis';
 import { setError, setLoading, signupSuccess } from '../../redux/slices/authSlice';
+import { showToast } from '../../components/toast/Toast';
 
 function SignUp() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     email: '',
@@ -53,6 +55,8 @@ function SignUp() {
       });
       dispatch(signupSuccess(response));
       setLocalError('');
+       showToast('Signup successful');
+      navigate('/login');
     } catch (err) {
       setLocalError(err.message || 'Signup failed');
       dispatch(setError(err.message));

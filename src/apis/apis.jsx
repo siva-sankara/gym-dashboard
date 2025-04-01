@@ -35,7 +35,7 @@ export const setAuthToken = (token) => {
 
 export const sendOTP = async (email) => {
     try {
-        const response = await api.post('/user/sendotp', { "email" : email });
+        const response = await api.post('/user/sendotp', { "email": email });
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -135,7 +135,7 @@ export const getLocationDetails = async (latitude, longitude) => {
                 accept: 'application/json'
             }
         });
-        
+
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -227,7 +227,7 @@ export const getTodosByDate = async (date) => {
                 date
             }
         });
-        
+
         return response.data;
     } catch (error) {
         throw error.response?.data || error.message;
@@ -278,6 +278,71 @@ export const verifyGymPayment = async (paymentDetails) => {
         throw error.response?.data || new Error('Payment verification failed');
     }
 };
+
+// get membership plans for a gym by gym id from databas
+export const getGymMembershipPlans = async (gymId) => {
+    try {
+        const response = await api.get(`${BASE_URL}/gyms/${gymId}/membership-plans`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { message: 'Failed to fetch membership plans' };
+    }
+};
+
+//gym membership plan subscription method
+export const subscribeToPlan = async (gymId, planId) => {
+    try {
+        const response = await api.post(`${BASE_URL}/gyms/${gymId}/plans/${planId}/subscribe`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { message: 'Failed to initiate subscription' };
+    }
+};
+
+export const verifyPaymentSubscription = async (gymId, planId, paymentData) => {
+    try {
+        const response = await api.post(
+            `${BASE_URL}/gyms/${gymId}/plans/${planId}/verify-payment`,
+            paymentData
+        );
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || { message: 'Payment verification failed' };
+    }
+};
+
+
+
+
+
+// Fetch registered gyms for gym owner
+export const fetchRegisteredGyms = async () => {
+    try {
+        const response = await api.get('/gyms/owner/registered');
+        return response.data.data; // Returns the array of registered gyms
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+
+
+
+export const getMembershipPlan = async (gymId, planId) => {
+    try {
+        const response = await api.get(`/gyms/${gymId}/membership-plans/${planId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+
+
+
+
+
+
 
 export default api;
 

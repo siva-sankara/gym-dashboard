@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./GymDetails.css";
 import { useParams } from "react-router-dom";
-import { getGymById } from "../../apis/apis";
+import { getGymById, getGymMembershipPlans, subscribeToPlan, verifyPaymentSubscription } from "../../apis/apis";
 import {
     FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaParking,
     FaShower,
@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import GymMap from "../maps/GymMap";
 import Loader from "../../utils/Loader";
+import { toast } from "react-toastify";
 
 
 
@@ -38,44 +39,6 @@ const backgroundImages = [
     "https://images.unsplash.com/photo-1576678927484-cc907957088c",
 ];
 
-const subscriptionPlans = [
-    {
-        name: "Basic",
-        price: "29.99",
-        duration: "Monthly",
-        features: [
-            "Access to gym equipment",
-            "Basic fitness assessment",
-            "Locker room access",
-            "2 Guest passes monthly"
-        ]
-    },
-    {
-        name: "Premium",
-        price: "49.99",
-        duration: "Monthly",
-        features: [
-            "All Basic features",
-            "Personal trainer consultation",
-            "Group fitness classes",
-            "Nutrition guidance",
-            "4 Guest passes monthly"
-        ],
-        popular: true
-    },
-    {
-        name: "Elite",
-        price: "79.99",
-        duration: "Monthly",
-        features: [
-            "All Premium features",
-            "Unlimited personal training",
-            "Spa access",
-            "Priority booking",
-            "Unlimited guest passes"
-        ]
-    }
-];
 
 const GymDetails = () => {
     const { gymId } = useParams();
@@ -86,7 +49,10 @@ const GymDetails = () => {
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [isMapInteractive, setIsMapInteractive] = useState(false);
     const [highlightedPlan, setHighlightedPlan] = useState(null);
-
+    const [membershipPlans, setMembershipPlans] = useState(null);
+    const [membershipLoading, setMembershipLoading] = useState(true);
+    const [paymentProcessing, setPaymentProcessing] = useState(false);
+    const [paymentButton, setPaymentButton] = useState(false);
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentBgImage((prev) => (prev + 1) % backgroundImages.length);
@@ -107,12 +73,170 @@ const GymDetails = () => {
                 setLoading(false);
             }
         };
-
+        const fetchMembershipPlans = async () => {
+            try {
+                const response = await getGymMembershipPlans(gymId);
+                setMembershipPlans(response.data);
+            } catch (err) {
+                console.error('Failed to fetch membership plans:', err);
+                setMembershipPlans(null);
+            } finally {
+                setMembershipLoading(false);
+            }
+        };
         if (gymId) {
             fetchGymDetails();
+            fetchMembershipPlans();
         }
     }, [gymId]);
-    console.log(gymDetails);
+
+    const handlePayment = async (plan) => {
+        try {
+            setPaymentProcessing(true);
+            
+            // Step 1: Initiate payment
+            const response = await subscribeToPlan(gymId, plan._id);
+            if (!response?.success) {
+                throw new Error(response?.message || 'Failed to create payment order');
+            }
+    
+            // Step 2: Configure Razorpay options
+            const options = {
+                key: process.env.REACT_APP_RAZORPAY_KEY_ID, // Use environment variable
+                amount: response.data.amount,
+                currency: response.data.currency,
+                name: response.data.name,
+                description: response.data.description,
+                order_id: response.data.order_id,
+                prefill: {
+                    name: response.data.prefill.name,
+                    email: response.data.prefill.email,
+                    contact: response.data.prefill.contact
+                },
+                notes: {
+                    gymId: response.data.notes.gymId,
+                    planId: response.data.notes.planId,
+                    userId: response.data.notes.userId
+                },
+                handler: async function (paymentResponse) {
+                    try {
+                        // Step 3: Verify payment
+                        const verificationData = {
+                            razorpay_order_id: paymentResponse.razorpay_order_id,
+                            razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                            razorpay_signature: paymentResponse.razorpay_signature,
+                            gymId: response.data.notes.gymId,
+                            planId: response.data.notes.planId
+                        };
+    
+                        const verificationResult = await verifyPaymentSubscription(
+                            verificationData.gymId,
+                            verificationData.planId,
+                            verificationData
+                        );
+    
+                        if (verificationResult.success) {
+                            setSelectedPlan(null);
+                            toast.success("Payment successful! Your membership is now active.");
+                            // Optionally refresh user data or redirect
+                            // navigate('/dashboard'); // or wherever you want to redirect
+                        } else {
+                            throw new Error(verificationResult.message || "Payment verification failed");
+                        }
+                    } catch (error) {
+                        console.error("Payment verification failed:", error);
+                        toast.error("Payment verification failed. Please contact support.");
+                    }
+                },
+                modal: {
+                    ondismiss: function() {
+                        setPaymentProcessing(false);
+                    }
+                },
+                theme: {
+                    color: "#528FF0"
+                }
+            };
+    
+            // Step 4: Initialize Razorpay
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.on('payment.failed', function (response) {
+                toast.error("Payment failed. Please try again.");
+                setPaymentProcessing(false);
+            });
+    
+            paymentObject.open();
+        } catch (error) {
+            console.error("Payment initiation failed:", error);
+            toast.error(error.message || "Failed to initiate payment. Please try again.");
+            setPaymentProcessing(false);
+        }
+    };
+    const renderMembershipSection = () => {
+        if (membershipLoading) {
+            return <div className="loading-plans">Loading membership plans...</div>;
+        }
+
+        return (
+            <>
+                {(!membershipPlans || membershipPlans.length === 0) ? (
+                    <section className="gym-cta-section">
+                        <h2 className="gym-section-title">Join Us Today</h2>
+                        <p className="gym-cta-description">
+                            Contact us to learn more about our membership options!
+                        </p>
+                        <button className="gym-cta-button">
+                            Join Now
+                            <FaArrowRight className="gym-cta-icon" />
+                        </button>
+                    </section>
+                ) : (
+                        <section className="gym-plans-section">
+                            <h2 className="gym-section-title">Membership Plans</h2>
+                            <div className="gym-plans-grid">
+                                {membershipPlans.map((plan, index) => (
+                                    <div
+                                        key={plan._id || index}
+                                        className={`gym-plan-card ${plan.isPopular ? 'popular' : ''} ${highlightedPlan === plan.name ? 'highlighted' : ''}`}
+                                    >
+                                        {plan.isPopular && <div className="gym-plan-badge">Most Popular</div>}
+                                        {highlightedPlan === plan.name && (
+                                            <div className="gym-plan-badge selected">Selected</div>
+                                        )}
+                                        <h3 className="gym-plan-name">{plan.name}</h3>
+                                        <div className="gym-plan-price">
+                                            <span className="gym-price-currency">₹</span>
+                                            <span className="gym-price-amount">{plan.price}</span>
+                                            <span className="gym-price-duration">/{plan.duration}</span>
+                                        </div>
+                                        <ul className="gym-plan-features">
+                                            {plan.features.map((feature, idx) => (
+                                                <li key={idx}>
+                                                    <FaCheck className="gym-feature-icon" />
+                                                    <span>{feature}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <button
+                                            className="gym-plan-button"
+                                            onClick={() => {
+                                                setHighlightedPlan(plan.name);
+                                                setSelectedPlan(plan);
+                                            }}
+                                        >
+                                            {highlightedPlan === plan.name ? 'Selected' : 'Choose Plan & Join'}
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                )}
+
+
+            </>
+        );
+    };
+
 
     if (loading) return <Loader text="Loading gym details..." height="100vh" />;
     if (error) return (
@@ -202,7 +326,7 @@ const GymDetails = () => {
                         <div className="gym-hero-reviews">
                             <h2 className="gym-reviews-title mobile-only">Member Reviews</h2>
                             {dummyReviews?.map((review, index) => (
-                                <div key={index} className="gym-review-card" style={{animationDelay: `${index * 0.2}s`}}>
+                                <div key={index} className="gym-review-card" style={{ animationDelay: `${index * 0.2}s` }}>
                                     <div className="gym-review-header">
                                         <span className="gym-review-author">{review.userName}</span>
                                         <span className="gym-review-rating">★ {review.rating}</span>
@@ -253,56 +377,11 @@ const GymDetails = () => {
                         ))}
                     </div>
                 </section>
-                <section className="gym-plans-section">
-                    <h2 className="gym-section-title">Membership Plans</h2>
-                    <div className="gym-plans-grid">
-                        {subscriptionPlans.map((plan, index) => (
-                            <div
-                                key={index}
-                                className={`gym-plan-card ${plan.popular ? 'popular' : ''} ${highlightedPlan === plan.name ? 'highlighted' : ''
-                                    }`}
-                            >
-                                {plan.popular && <div className="gym-plan-badge">Most Popular</div>}
-                                {highlightedPlan === plan.name && (
-                                    <div className="gym-plan-badge selected">Selected</div>
-                                )}
-                                <h3 className="gym-plan-name">{plan.name}</h3>
-                                <div className="gym-plan-price">
-                                    <span className="gym-price-currency">$</span>
-                                    <span className="gym-price-amount">{plan.price}</span>
-                                    <span className="gym-price-duration">/{plan.duration}</span>
-                                </div>
-                                <ul className="gym-plan-features">
-                                    {plan.features.map((feature, idx) => (
-                                        <li key={idx}>
-                                            <FaCheck className="gym-feature-icon" />
-                                            <span>{feature}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <button
-                                    className="gym-plan-button"
-                                    onClick={() => {
-                                        setHighlightedPlan(plan.name);
-                                        setSelectedPlan(plan);
-                                    }}
-                                >
-                                    {highlightedPlan === plan.name ? 'Selected' : 'Choose Plan'}
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-                <section className="gym-cta-section">
-                    <h2 className="gym-section-title">Join Us Today</h2>
-                    <p className="gym-cta-description">
-                        Start your fitness journey with us today!
-                    </p>
-                    <button className="gym-cta-button">
-                        Join Now
-                        <FaArrowRight className="gym-cta-icon" />
-                    </button>
-                </section>
+                {/* ... other sections ... */}
+                {renderMembershipSection()}
+                {/* ... other sections ... */}
+
+
                 <section className="gym-contact-section">
                     <h2 className="gym-section-title">Location & Contact</h2>
                     <div className="gym-contact-grid reverse">
@@ -367,6 +446,29 @@ const GymDetails = () => {
                                 console.log(`Subscribed to ${selectedPlan.name}`);
                                 setSelectedPlan(null);
                             }}>Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {selectedPlan && (
+                <div className="gym-modal-overlay">
+                    <div className="gym-modal-content">
+                        <h3>Confirm Subscription</h3>
+                        <p>Are you sure you want to subscribe to the {selectedPlan.name} plan?</p>
+                        <div className="gym-modal-actions">
+                            <button
+                                onClick={() => setSelectedPlan(null)}
+                                disabled={paymentProcessing}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => handlePayment(selectedPlan)}
+                                disabled={paymentProcessing}
+                                className="gym-modal-confirm"
+                            >
+                                {paymentProcessing ? 'Processing...' : 'Proceed to Payment'}
+                            </button>
                         </div>
                     </div>
                 </div>

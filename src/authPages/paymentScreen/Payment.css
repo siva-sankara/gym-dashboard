@@ -1,262 +1,225 @@
-.payment-wrapper {
+.payment-screen {
     min-height: 100vh;
-    padding: 2rem;
     background: #0a0a0a;
+    padding: 4rem 2rem;
 }
 
-.payment-content {
+.payment-container {
     max-width: 1200px;
     margin: 0 auto;
-    text-align: center;
-    padding: 0 2rem;
+    color: white;
 }
 
-.payment-heading {
-    color: #fff;
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
-    /* font-family: 'Orbitron', 'Rajdhani', sans-serif; */
+.payment-container h2 {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    text-align: center;
+    margin-bottom: 0.5rem;
     background: linear-gradient(135deg, #ffffff 0%, #ff3547 70%, #ff8f98 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 2px 2px 15px rgba(255, 53, 71, 0.3);
 }
 
-.payment-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 3rem;
+.gym-name {
+    text-align: center;
+    color: #e0e0e0;
     font-size: 1.2rem;
+    margin-bottom: 3rem;
 }
 
-.plans-grid {
+.subscription-plans {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     margin-bottom: 2rem;
 }
 
-.plan-item {
-    background: #1a1a1a;
-    border-radius: 16px;
+.plan-card {
+    background: #242424;
+    border-radius: 12px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    text-align: center;
     position: relative;
-    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid #333;
+    cursor: pointer;
 }
 
-.plan-item:hover {
+.plan-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.plan-item--selected {
+.plan-card.popular {
     border: 2px solid #ff3547;
     background: #2a2a2a;
 }
 
-.plan-item--premium {
-    border: 2px solid #ff3547;
-    background: #2a2a2a;
+.plan-card.selected {
+    transform: translateY(-10px);
+    border: 2px solid #28a745;
+    box-shadow: 0 10px 30px rgba(40, 167, 69, 0.2);
+    background: linear-gradient(145deg, #2a2a2a, #242424);
 }
 
-.plan-badge {
+.popular-tag {
     position: absolute;
     top: -12px;
-    right: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     background: #ff3547;
     color: white;
-    padding: 8px 15px;
+    padding: 0.5rem 1.2rem;
     border-radius: 20px;
     font-size: 0.9rem;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 0.5rem;
 }
 
-.plan-title {
+.plan-card h3 {
     color: #fff;
     font-size: 1.8rem;
     margin-bottom: 1rem;
 }
 
-.plan-price {
-    margin: 1.5rem 0;
+.prices {
     font-size: 3rem;
     color: #ff3547;
+    margin: 1.5rem 0;
     font-weight: 700;
 }
 
-.price-currency {
+.currency {
     font-size: 1.8rem;
     vertical-align: super;
 }
 
-.price-duration {
+.duration {
     font-size: 1.1rem;
     color: #999;
 }
 
-.plan-features {
-    text-align: left;
+.features-list-f {
+    list-style: none;
+    padding: 0;
     margin: 1.5rem 0;
+    text-align: left;
 }
 
-.feature-item {
+.feature {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.8rem;
     margin-bottom: 1rem;
     color: #e0e0e0;
     font-size: 1.1rem;
 }
 
-.feature-icon {
-    color: #ff3547;
-    font-size: 1.2rem;
+.feature svg {
+    color: #28a745;
 }
 
-.plan-select-btn {
+.select-plan-btn {
     width: 100%;
     padding: 1rem;
-    border: 2px solid #ff3547;
-    border-radius: 8px;
-    background: transparent;
-    color: #ff3547;
-    font-weight: 600;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.plan-select-btn:hover, 
-.plan-select-btn--selected {
     background: #ff3547;
-    color: white;
-    transform: translateY(-2px);
-}
-
-.payment-submit-btn {
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #ff3547 0%, #ff7b8a 100%);
     color: white;
     border: none;
     border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 100%;
-    max-width: 300px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2rem;
 }
 
-.payment-submit-btn:hover:not(:disabled) {
+.select-plan-btn:hover {
+    background: #ff1f35;
+    transform: translateY(-2px);
+}
+
+.select-plan-btn.selected {
+    background: #2a2a2a;
+    color: #28a745;
+    border: 2px solid #28a745;
+}
+
+.payment-button {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #ff3547 0%, #ff7b8a 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.payment-button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(255, 53, 71, 0.3);
 }
 
-.payment-submit-btn:disabled {
-    background: #333;
+.payment-button:disabled {
+    background: #666;
     cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.payment-error-message {
-    text-align: center;
+.payment-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
     color: #ff3547;
-    padding: 2rem;
     font-size: 1.2rem;
-    background: #1a1a1a;
-    border-radius: 16px;
-    margin: 2rem auto;
-    max-width: 600px;
+    text-align: center;
+    padding: 2rem;
 }
 
 @media (max-width: 768px) {
-    .payment-wrapper {
-        padding: 1rem;
+    .payment-screen {
+        padding: 2rem 1rem;
     }
 
-    .payment-content {
-        padding: 0 1rem;
-    }
-
-    .plans-grid {
+    .subscription-plans {
         grid-template-columns: 1fr;
-        gap: 1.5rem;
     }
 
-    .plan-item {
-        padding: 1.5rem;
+    .plan-card {
+        margin: 0 1rem;
     }
 
-    .payment-heading {
-        font-size: 1.8rem;
+    .prices {
+        font-size: 2.5rem;
+    }
+
+    .feature {
+        font-size: 1rem;
     }
 }
 
-@media (max-width: 480px) {
-    .payment-content {
-        padding: 0 0.5rem;
+@keyframes selectedPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4);
     }
+    70% {
+        box-shadow: 0 0 0 10px rgba(40, 167, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(40, 167, 69, 0);
+    }
+}
 
-    .payment-heading {
-        margin-bottom: 0.5rem;
-        font-size: 1.8rem;
-    }
-
-    .payment-subtitle {
-        margin-bottom: 1.5rem;
-        font-size: 1rem;
-    }
-
-    .plans-grid {
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .plan-item {
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .plan-title {
-        margin-bottom: 0.5rem;
-        font-size: 1.5rem;
-    }
-
-    .plan-price {
-        margin: 0.8rem 0;
-        font-size: 2.2rem;
-    }
-
-    .plan-features {
-        margin: 0.8rem 0;
-    }
-
-    .feature-item {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-        gap: 5px;
-    }
-
-    .plan-select-btn {
-        padding: 0.8rem;
-        font-size: 1rem;
-    }
-
-    .payment-submit-btn {
-        margin-top: 1rem;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-    }
-
-    .payment-error-message {
-        margin: 1rem auto;
-        padding: 1rem;
-    }
+.plan-card.selected {
+    animation: selectedPulse 2s infinite;
 }

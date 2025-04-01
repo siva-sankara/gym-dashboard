@@ -89,9 +89,9 @@ const RegisterOwnGym = () => {
                     formData.location.coordinates = {
                         type: 'Point',
                         coordinates: [
-                            locationData.coordinates.latitude   ,
+                            
                             locationData.coordinates.longitude,  // Longitude first
-                             // Latitude second
+                            locationData.coordinates.latitude   , // Latitude second
                         ]
                     };
                 } catch (error) {
@@ -131,7 +131,6 @@ const RegisterOwnGym = () => {
                                 duration: '6 months',
                                 features: ['Premium listing', '24/7 support', 'Advanced Analytics', 'Marketing Tools']
                             }
-                        
                         ]
                     }
                 });
@@ -209,9 +208,8 @@ const RegisterOwnGym = () => {
                         coordinates: {
                             type: 'Point',
                             coordinates: [
-                                locationData?.coordinates.latitude  ,
                                 locationData?.coordinates.longitude,
-                                 
+                                locationData?.coordinates.latitude  ,
                             ]
                         }
                     }
