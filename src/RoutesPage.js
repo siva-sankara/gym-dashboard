@@ -23,6 +23,9 @@ import ToDoCalendar from './authPages/todosList/ToDoCalendar'
 import RegisterOwnGym from './authPages/registerOwnGym/RegisterOwnGym'
 import GymDetails from './components/gymDetails/GymDetails'
 import Payment from './authPages/paymentScreen/Payment'
+import GymOwnerDashboardOverView from './authPages/gymOwnerDashboardPages/dashboardOverView/GymOwnerDashboardOverView'
+import GymProfile from './authPages/gymOwnerDashboardPages/gymProfile/GymProfile'
+import ManageGymMembers from './authPages/gymOwnerDashboardPages/gymMembers/ManageGymMembers'
 
 
 function RoutesPage() {
@@ -49,8 +52,8 @@ function RoutesPage() {
     switch (userRole) {
       case 'admin':
         return '/admin-dashboard';
-      case 'owner':
-        return '/owner-dashboard';
+      case 'gym_owner':
+        return '/gym-owner-dashboard';
       default:
         return '/user-dashboard';
     }
@@ -151,14 +154,32 @@ function RoutesPage() {
         } />
 
         {/* Gym Owner Dashboard Routes */}
-        <Route path="/owner-dashboard" element={
+          <Route path="/gym-owner-dashboard/*" element={
           <ProtectedRoute>
             <ProtectedLayout>
-              <GymOwnerDashboard />
+              <GymOwnerDashboard>
+                <Routes>
+                  <Route index element={<GymOwnerDashboardOverView />} />
+                  <Route path="mygyms/*" element={<GymProfile />} />
+                  <Route path="to-dos" element={<ToDoCalendar />} />
+                  <Route path="members" element={<ManageGymMembers  />} />
+                  {/* 
+                  <Route path="memberships" element={<Memberships />} />
+                  <Route path="revenue" element={<Revenue />} />
+                  <Route path="trainers" element={<Trainers />} />
+                  <Route path="schedules" element={<Schedules />} />
+                  <Route path="equipment" element={<Equipment />} />
+                  <Route path="locations" element={<Locations />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="mygyms" element={<NearByGyms />} />
+                  
+                  <Route path="register-gym" element={<RegisterOwnGym />} /> */}
+                  <Route path="gym/:gymId" element={<GymDetails />} />
+                </Routes>
+              </GymOwnerDashboard>
             </ProtectedLayout>
           </ProtectedRoute>
         } />
-
         {/* Admin Dashboard Routes */}
         <Route path="/admin-dashboard" element={
           <ProtectedRoute>

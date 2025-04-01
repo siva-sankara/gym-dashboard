@@ -1,0 +1,649 @@
+.owner-dashboard {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.owner-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: #666;
+    gap: 1rem;
+}
+
+.owner-actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.owner-edit-all-btn,
+.owner-delete-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.owner-edit-all-btn {
+    background: #ff3547;
+    color: #fff;
+}
+
+.owner-delete-btn {
+    background: #242424;
+    color: #ff3547;
+    border: 1px solid #ff3547;
+}
+
+.owner-header {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.owner-cover-section {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+}
+
+.owner-cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.owner-basic-info {
+    padding: 2rem;
+}
+
+.owner-title-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.owner-title-section h1 {
+    margin: 0;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.owner-status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: #28a745;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.owner-content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    grid-auto-flow: dense;
+}
+.owner-card:nth-child(1),
+.owner-card:nth-child(2) {
+    grid-column: span 2;
+}
+
+/* Facilities and Hours cards */
+.owner-card:nth-child(3),
+.owner-card:nth-child(4) {
+    grid-column: span 1;
+}
+
+/* Map card always spans full width */
+.owner-map-card {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+    .owner-card:nth-child(1),
+    .owner-card:nth-child(2) {
+        grid-column: span 1;
+    }
+}
+.owner-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.owner-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.owner-card-header h2 {
+    margin: 0;
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+.owner-contact-info {
+    padding: 1.5rem;
+}
+
+.owner-info-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: #e0e0e0;
+}
+
+.owner-icon {
+    color: #ff3547;
+    font-size: 1.2rem;
+}
+
+.owner-hours-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.owner-hours-item {
+    padding: 1rem;
+    background: #242424;
+    border-radius: 8px;
+}
+
+.owner-hours-item h3 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.owner-hours-item p {
+    margin: 0;
+    color: #e0e0e0;
+}
+
+.owner-facilities-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.owner-facility-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem;
+    background: #242424;
+    border-radius: 8px;
+    color: #e0e0e0;
+}
+
+.owner-facility-icon {
+    color: #ff3547;
+    font-size: 1.2rem;
+}
+
+.owner-plans-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.owner-plan-card {
+    background: #242424;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.owner-plan-header {
+    margin-bottom: 1rem;
+}
+
+.owner-plan-header h3 {
+    margin: 0 0 0.5rem 0;
+    color: #fff;
+}
+
+.owner-plan-price {
+    color: #ff3547;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.owner-plan-features {
+    color: #e0e0e0;
+}
+
+.owner-plan-features p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.owner-empty-plans {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: #666;
+    text-align: center;
+    gap: 1rem;
+}
+
+.owner-map-card {
+    grid-column: 1 / -1;
+}
+
+.owner-map-container {
+    height: 400px;
+    width: 100%;
+}
+
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    box-shadow: 3px 1px 3px 3px rgb(255, 252, 252);
+    
+}
+
+.edit-modal,
+.delete-modal {
+    background: #1a1a1a;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(234, 228, 228, 0.3);
+}
+
+.delete-modal {
+    max-width: 500px;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    color: #fff;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+    color: #ff3547;
+}
+
+.modal-tabs {
+    display: flex;
+    padding: 0 1.5rem;
+    background: #242424;
+    border-bottom: 1px solid #333;
+    overflow-x: auto;
+}
+
+.modal-tabs button {
+    padding: 1rem 1.5rem;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.3s ease;
+    white-space: nowrap;
+}
+
+.modal-tabs button.active {
+    color: #ff3547;
+}
+
+.modal-tabs button.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ff3547;
+}
+
+.modal-contentss {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.edit-modal-section {
+    display: flex;
+    flex-direction: column;
+    /* gap: 1.5rem; */
+}
+
+.edit-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.edit-field-group label {
+    color: #e0e0e0;
+    font-size: 0.9rem;
+}
+
+.edit-field-group input,
+.edit-field-group textarea {
+    padding: 0.8rem;
+    background: #242424;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+.edit-field-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.edit-hours-group {
+    margin-bottom: 0rem;
+}
+
+.edit-hours-group h4 {
+    color: #e0e0e0;
+    margin-bottom: 0.5rem;
+}
+
+.hours-inputs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hours-inputs input {
+    padding: 0.8rem;
+    background: #242424;
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.hours-inputs span {
+    color: #666;
+}
+
+.facilities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+.edit-modal,
+.delete-modal {
+    background: #1a1a1a;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+}
+.facility-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: #242424;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.facility-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e0e0e0;
+    cursor: pointer;
+}
+
+.edit-plan-group {
+    background: #242424;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.add-plan-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: #333;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.add-plan-btn:hover {
+    background: #444;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #333;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.modal-cancel-btn,
+.modal-save-btn,
+.modal-delete-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-cancel-btn {
+    background: #333;
+    color: #fff;
+}
+
+.modal-save-btn {
+    background: #ff3547;
+    color: #fff;
+}
+.owner-stats-grid {
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.owner-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #242424;
+    border-radius: 8px;
+    color: #e0e0e0;
+}
+
+.owner-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.owner-stat-content h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #ff3547;
+}
+
+.owner-stat-content p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #e0e0e0;
+}
+.modal-delete-btn {
+    background: #dc3545;
+    color: #fff;
+}
+
+.delete-warning-icon {
+    font-size: 3rem;
+    color: #ff3547;
+    margin-bottom: 1rem;
+}
+
+.delete-warning {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* Hover Effects */
+.owner-edit-all-btn:hover,
+.modal-save-btn:hover {
+    background: #ff1f35;
+    transform: translateY(-2px);
+}
+
+.owner-delete-btn:hover,
+.modal-delete-btn:hover {
+    background: #c82333;
+    color: #fff;
+}
+
+.modal-cancel-btn:hover {
+    background: #444;
+}
+/* Make contact info card take full width */
+.owner-card:has(.owner-contact-info) {
+    grid-column: 1 / -1;
+  }
+  
+  /* Adjust contact info layout for full width */
+  .owner-contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+  
+  .owner-info-item {
+    background: #242424;
+    padding: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .owner-dashboard {
+        padding: 10px;
+    }
+    .owner-info-item {
+        padding: 10px;
+    }
+    .owner-content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-modal,
+    .delete-modal {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .modal-tabs {
+        padding: 0;
+    }
+
+    .modal-tabs button {
+        padding: 1rem;
+    }
+
+    .facilities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .owner-actions-bar {
+        flex-direction: column;
+    }
+
+    .owner-edit-all-btn,
+    .owner-delete-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .owner-cover-section {
+        height: 200px;
+    }
+
+    .owner-basic-info {
+        padding: 1rem;
+    }
+
+    .owner-title-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

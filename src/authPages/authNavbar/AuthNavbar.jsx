@@ -16,7 +16,12 @@ import {
   FaSignOutAlt,
   FaCreditCard,
   FaEdit,
-  FaBell
+  FaBell,
+  FaUser,
+  FaPlusCircle,
+  FaBuilding,
+  FaHome,
+  FaListAlt
 } from 'react-icons/fa';
 import './AuthNavbar.css';
 
@@ -46,9 +51,17 @@ const AuthNavbar = ({ onLogout }) => {
     return currentPath === path;
   };
 
-  const handleLogout = (e) => {
+  const handleLogout =async(e) => {
     e.preventDefault();
-    onLogout();
+    try {
+    localStorage.clear();
+    sessionStorage.clear();
+    await new Promise(resolve => setTimeout(resolve, 100));
+    window.location.href = '/login';
+  } catch (error) {
+    console.error('Logout error:', error);
+    navigate('/login');
+  }
   };
   const handleProfileClick = (e) => {
     e.preventDefault();
@@ -90,14 +103,21 @@ const AuthNavbar = ({ onLogout }) => {
           { to: '/all-users', icon: <FaUsers />, text: 'Users' },
           { to: '/settings', icon: <FaUserCog />, text: 'Settings' }
         ];
-      case 'gym-owner':
-        return [
-          { to: '/dashboard', icon: <FaChartLine />, text: 'Dashboard' },
-          { to: '/members', icon: <FaUsers />, text: 'Members' },
-          { to: '/trainers', icon: <FaUsers />, text: 'Trainers' },
-          { to: '/subscriptions', icon: <FaDollarSign />, text: 'Subscriptions' },
-          { to: '/settings', icon: <FaUserCog />, text: 'Settings' }
-        ];
+        case 'gym_owner':
+          return [
+            { to: '/gym-owner-dashboard', icon: <FaHome />, text: 'Dashboard' },
+            { to: '/gym-owner-dashboard/mygyms', icon: <FaBuilding />, text: 'My Gyms' },
+            { to: '/gym-owner-dashboard/to-dos', icon: <FaListAlt />, text: 'Workout Planner' },
+            { to: '/gym-owner-dashboard/register-gym', icon: <FaPlusCircle />, text: 'Add New Gym' },
+            {
+              to: '#',
+              icon: <FaUser />,
+              text: 'My Account',
+              hasDropdown: true,
+              dropdownItems: getProfileDropdownItems(),
+              onClick: handleProfileClick
+            }
+          ];
       case 'trainer':
         return [
           { to: '/dashboard', icon: <FaChartLine />, text: 'Dashboard' },

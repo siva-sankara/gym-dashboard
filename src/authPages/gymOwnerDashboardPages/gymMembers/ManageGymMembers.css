@@ -1,0 +1,302 @@
+.gym-member-management {
+  padding: 2rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+  min-height: 70vh;
+}
+
+.gym-member-management__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.gym-member-management__header h1 {
+  color: #fff;
+  margin: 0;
+}
+
+.gym-member-management__add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: #ff3547;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gym-member-management__controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.gym-member-management__search,
+.gym-member-management__filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #242424;
+  border-radius: 8px;
+  flex: 1;
+}
+
+.gym-member-management__search input,
+.gym-member-management__filter select {
+  background: none;
+  border: none;
+  color: #fff;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.gym-member-management__search svg,
+.gym-member-management__filter svg {
+  color: #666;
+}
+
+.gym-member-management__table-wrapper {
+  overflow-x: auto;
+}
+
+.gym-member-management__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #242424;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.gym-member-management__table th,
+.gym-member-management__table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+  color: #fff;
+  vertical-align: middle;
+}
+
+.gym-member-management__table th {
+  background: #1a1a1a;
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gym-member-management__table tbody tr:nth-child(odd) {
+  background: #242424;
+}
+
+.gym-member-management__table tbody tr:nth-child(even) {
+  background: #2a2a2a;
+}
+
+.gym-member-management__table tbody tr:hover {
+  background: #333;
+}
+
+.gym-member-management__status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.gym-member-management__status-badge--active {
+  background: #28a745;
+  color: white;
+}
+
+.gym-member-management__status-badge--inactive {
+  background: #dc3545;
+  color: white;
+}
+
+.gym-member-management__status-badge--pending {
+  background: #ffc107;
+  color: black;
+}
+
+.gym-member-management__actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.gym-member-management__profile-btn,
+.gym-member-management__edit-btn,
+.gym-member-management__delete-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.gym-member-management__profile-btn {
+  background: #4CAF50;
+  color: white;
+}
+
+.gym-member-management__edit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.gym-member-management__delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.gym-member-management__modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gym-member-management__modal {
+  background: #1a1a1a;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.gym-member-management__modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #333;
+}
+
+.gym-member-management__modal-header h2 {
+  margin: 0;
+  color: #fff;
+}
+
+.gym-member-management__modal-close {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.5rem;
+}
+
+.gym-member-management__modal-content {
+  padding: 1.5rem;
+}
+
+.gym-member-management__profile-info {
+  color: #fff;
+}
+
+.gym-member-management__profile-info h3 {
+  margin: 0 0 1rem 0;
+  color: #ff3547;
+}
+
+.gym-member-management__profile-info p {
+  margin: 0.5rem 0;
+}
+
+.gym-member-management__profile-info strong {
+  color: #666;
+  margin-right: 0.5rem;
+}
+.gym-member-management__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: #fff;
+    font-size: 1.2rem;
+  }
+  
+  .gym-member-management__profile-info h3:not(:first-child) {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+  }
+  .gym-member-management__profile-info p {
+    margin: 0.8rem 0;
+    line-height: 1.5;
+  }
+  
+  .gym-member-management__profile-info h3 {
+    color: #ff3547;
+    margin: 1.5rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #333;
+  }
+  
+  .gym-member-management__profile-info h3:first-child {
+    margin-top: 0;
+  }
+  
+  .gym-member-management__modal {
+    background: #1a1a1a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  .gym-member-management__modal-content {
+    padding: 2rem;
+  }
+@media (max-width: 768px) {
+  .gym-member-management {
+    padding: 10px;
+    min-height: 90vh;
+  }
+
+  .gym-member-management__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .gym-member-management__controls {
+    flex-direction: column;
+  }
+
+  .gym-member-management__actions {
+    flex-direction: column;
+  }
+
+  .gym-member-management__table td {
+    min-width: 120px;
+  }
+
+  .gym-member-management__table th:last-child,
+  .gym-member-management__table td:last-child {
+    position: sticky;
+    right: 0;
+    background: inherit;
+  }
+}
