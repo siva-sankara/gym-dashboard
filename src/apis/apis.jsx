@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { m } from 'framer-motion';
 
 // const BASE_URL = 'http://localhost:8080/api/v1';
 const BASE_URL = "https://gym-mrck.onrender.com/api/v1"
@@ -326,8 +327,6 @@ export const fetchRegisteredGyms = async () => {
 };
 
 
-
-
 export const getMembershipPlan = async (gymId, planId) => {
     try {
         const response = await api.get(`/gyms/${gymId}/membership-plans/${planId}`);
@@ -337,6 +336,34 @@ export const getMembershipPlan = async (gymId, planId) => {
     }
 };
 
+// Add this new function for deleting gym members
+export const deleteGymMember = async (gymId, memberId) => {
+    try {
+        const response = await api.delete(`/gyms/${gymId}/members/${memberId}`);
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
+
+// Get gym members with pagination and filtering
+export const getGymMembers = async (gymId, { page = 1, limit = 10, status = '' }) => {
+    try {
+        const response = await api.get(`/gyms/${gymId}/members`, {
+            params: {
+                page,
+                limit,
+                ...(status && { status })
+            }
+        });
+        console.log('====================================');
+        console.log(response);
+        console.log('====================================');
+        return response.data;
+    } catch (error) {
+        throw error.response?.data || error.message;
+    }
+};
 
 
 

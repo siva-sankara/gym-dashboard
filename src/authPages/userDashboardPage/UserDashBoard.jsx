@@ -17,7 +17,7 @@ function UserDashBoard() {
 
   const location = useSelector((state) => state.location);
 
-  const [selectedCity, setSelectedCity] = useState(location?.address?.state_district || 'vizag');
+  const [selectedCity, setSelectedCity] = useState(location?.address?.county|| 'vizag');
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
 
   const [approvedGyms, setApprovedGyms] = useState([]);
@@ -40,8 +40,20 @@ function UserDashBoard() {
 
 
   useEffect(() => {
-    if (location?.address?.state_district) {
-      setSelectedCity(location?.address?.state_district);
+    if (location?.address?.city ) {
+      if (location?.address?.suburb) {
+        const cleanedLocation = location.address.suburb
+        .replace(/\d+/g, '')
+        .replace(/\s*[Ww][Aa][Rr][Dd]\b/gi, '')
+        .trim();
+        setSelectedCity(cleanedLocation);
+        }
+      else{
+        setSelectedCity(location?.address?.city );
+      }
+    }else if( location?.address?.state_district)
+    {
+      setSelectedCity(location?.address?.state_district );
     }
   }, [location]);
 
@@ -182,7 +194,7 @@ function UserDashBoard() {
             <input
               type="text"
               name="area"
-              className="input-field"
+              className="input-field SSS"
               placeholder="Search by area..."
               value={searchParams.area}
               onChange={handleSearchInputChange}
@@ -190,7 +202,7 @@ function UserDashBoard() {
             <input
               type="text"
               name="city"
-              className="input-field"
+              className="input-field SSS"
               placeholder="Enter city..."
               value={searchParams.city}
               onChange={handleSearchInputChange}
@@ -317,7 +329,7 @@ function UserDashBoard() {
                       />
                     </div>
                     <div className="gym-info">
-                      <h3>{gym.name}</h3>
+                      <h3  className="gym-name-ellipsis">{gym.name}</h3>
                       <p><FaMapMarkerAlt /> {gym.location?.area}, {gym.location?.city}</p>
                       <div className="rating">
                         <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
@@ -387,13 +399,13 @@ function UserDashBoard() {
                     </div>
                   </div>
                   <div className="nearby-gym-info">
-                    <h3>{gym.name}</h3>
+                  <h3 className="gym-name-ellipsis">{gym.name}</h3>
                     <p className="location">{gym.location?.area}, {gym.location?.city}</p>
                     <div className="rating-price">
                       <span className="rating">
                         <FaStar className="star-icon" /> {gym.ratings?.average || 'N/A'}
                       </span>
-                      <span className="prices">{gym.price || 'Price not available'}</span>
+                      <span className="price">{gym.price || 'Price not available'}</span>
                     </div>
                     <div className="nearby-facilities">
                       {(gym.facilities || []).slice(0, 2).map((facility, facilityIndex) => (

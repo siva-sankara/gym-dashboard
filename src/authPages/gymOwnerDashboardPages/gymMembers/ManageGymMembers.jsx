@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     FaUserPlus,
     FaEdit,
@@ -8,10 +8,13 @@ import {
     FaFilter,
     FaCheck,
     FaTimes,
-    FaUser
+    FaUser,
+    FaDownload
 } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
 import './ManageGymMembers.css';
-import { getUserById } from '../../../apis/apis';
+import { deleteGymMember, getGymById, getUserById } from '../../../apis/apis';
+import { setSelectedGym, updateGymMembers } from '../../../redux/slices/gymSlice';
 
 const ManageGymMembers = () => {
     const { selectedGym } = useSelector((state) => state.gym);
@@ -21,6 +24,12 @@ const ManageGymMembers = () => {
     const [selectedMember, setSelectedMember] = useState(null);
     const [userDetails, setUserDetails] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+    const [memberToDelete, setMemberToDelete] = useState(null);
+
+    const dispatch = useDispatch();
 
     const filteredMembers = selectedGym?.members?.filter(member => {
         const memberName = member.user?.firstName || '';
@@ -50,16 +59,92 @@ const ManageGymMembers = () => {
             setLoading(false);
         }
     };
+
+    const downloadMembersList = () => {
+        const membersData = selectedGym?.members?.map((member, index) => ({
+            'Sr. No.': index + 1,
+            'Member Name': member.user?.firstName || 'N/A',
+            'Email': member.user?.email || 'N/A',
+            'Membership Plan': member.membershipPlan || 'N/A',
+            'Join Date': new Date(member.joinDate).toLocaleDateString(),
+            'End Date': calculateEndDate(member.joinDate, member.endDate),
+            'Status': member.status || 'N/A',
+            'Phone Number': member.user?.phoneNumber || 'N/A'
+        })) || [];
+
+        const ws = XLSX.utils.json_to_sheet(membersData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Members');
+
+        const fileName = `gym_members_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+        XLSX.writeFile(wb, fileName);
+    };
+
+    const NoMembersMessage = () => (
+        <tr>
+            <td colSpan="6" style={{
+                textAlign: 'center',
+                padding: '2rem',
+                color: '#666',
+                backgroundColor: '#f9f9f9'
+            }}>
+                <div style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>
+                    No Active Gym Members
+                </div>
+                <div style={{ fontSize: '0.9rem', color: '#888' }}>
+                    There are currently no members registered in this gym.
+                </div>
+            </td>
+        </tr>
+    );
+
+    const handleDeleteClick = (member) => {
+        setMemberToDelete(member);
+        setShowDeleteConfirmModal(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!memberToDelete || !selectedGym?.id) return;
+
+        setDeleteLoading(true);
+        try {
+            await deleteGymMember(selectedGym.id, memberToDelete._id);
+            const updatedGymData = await getGymById(selectedGym.id);
+            dispatch(setSelectedGym({
+                ...selectedGym,
+                members: updatedGymData.data.members
+            }));
+
+            setShowDeleteConfirmModal(false);
+            setMemberToDelete(null);
+        } catch (error) {
+            console.error('Failed to delete member:', error);
+            // You might want to show an error message to the user here
+        } finally {
+            setDeleteLoading(false);
+        }
+    };
+
     return (
         <div className="gym-member-management">
             <div className="gym-member-management__header">
                 <h1>Manage Members</h1>
-                <button className="gym-member-management__add-btn">
-                    <FaUserPlus /> Add New Member
-                </button>
+                <div className="gym-member-management__header-buttons">
+                    <button className="gym-member-management__add-btn">
+                        <FaUserPlus /> Add New Member
+                    </button>
+                    <button
+                        className="gym-member-management__download-btn"
+                        onClick={downloadMembersList}
+                        disabled={!filteredMembers.length}
+                    >
+                        <FaDownload /> Export to Excel
+                    </button>
+                </div>
             </div>
 
-            <div className="gym-member-management__controls">
+            <div className="gym-member-hy7jmanagement__controls">
                 <div className="gym-member-management__search">
                     <FaSearch />
                     <input
@@ -87,6 +172,7 @@ const ManageGymMembers = () => {
                 <table className="gym-member-management__table">
                     <thead>
                         <tr>
+                            <th>Sr. No.</th>
                             <th>Member Name</th>
                             <th>Membership Plan</th>
                             <th>Join Date</th>
@@ -96,34 +182,43 @@ const ManageGymMembers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredMembers.map((member, index) => (
-                            <tr key={index}>
-                                <td>{member.user?.firstName || 'N/A'}</td>
-                                <td>{member.membershipPlan}</td>
-                                <td>{new Date(member.joinDate).toLocaleDateString()}</td>
-                                <td>{calculateEndDate(member.joinDate, member.endDate)}</td>
-                                <td>
-                                    <span className={`gym-member-management__status-badge gym-member-management__status-badge--${member.status}`}>
-                                        {member.status === 'active' ? <FaCheck /> : <FaTimes />}
-                                        {member.status}
-                                    </span>
-                                </td>
-                                <td className="gym-member-management__actions">
-                                    <button
-                                        className="gym-member-management__profile-btn"
-                                        onClick={() => handleShowProfile(member)}
-                                    >
-                                        <FaUser /> Profile
-                                    </button>
-                                    <button className="gym-member-management__edit-btn">
-                                        <FaEdit /> Edit
-                                    </button>
-                                    <button className="gym-member-management__delete-btn">
-                                        <FaTrash /> Remove
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                        {filteredMembers.length === 0 ? (
+                            <NoMembersMessage />
+                        ) : (
+                            filteredMembers.map((member, index) => (
+                                <tr key={`${member._id}-${index}`}>
+                                    <td>{index + 1}</td>
+                                    <td>{member.user?.firstName || 'N/A'}</td>
+                                    <td>{member.membershipPlan}</td>
+                                    <td>{new Date(member.joinDate).toLocaleDateString()}</td>
+                                    <td>{calculateEndDate(member.joinDate, member.endDate)}</td>
+                                    <td>
+                                        <span className={`gym-member-management__status-badge gym-member-management__status-badge--${member.status}`}>
+                                            {member.status === 'active' ? <FaCheck /> : <FaTimes />}
+                                            {member.status}
+                                        </span>
+                                    </td>
+                                    <td className="gym-member-management__actions">
+                                        <button
+                                            className="gym-member-management__profile-btn"
+                                            onClick={() => handleShowProfile(member)}
+                                        >
+                                            <FaUser /> <p className='text-hide'>Profile</p>
+                                        </button>
+                                        <button className="gym-member-management__edit-btn">
+                                            <FaEdit /><p className='text-hide'>Edit</p>
+                                        </button>
+                                        <button
+                                            className="gym-member-management__delete-btn"
+                                            onClick={() => handleDeleteClick(member)}
+                                            disabled={deleteLoading}
+                                        >
+                                            <FaTrash /> <p className='text-hide'>{deleteLoading ? 'Deleting...' : 'Remove'}</p>
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
@@ -174,6 +269,41 @@ const ManageGymMembers = () => {
                     </div>
                 </div>
             )}
+
+            {showDeleteConfirmModal && (
+                <div className="gym-member-management__modal-overlay">
+                    <div className="gym-member-management__modal">
+                        <div className="gym-member-management__modal-header">
+                            <h2>Confirm Deletion</h2>
+                        </div>
+                        <div className="gym-member-management__modal-content">
+                            <b><p>Are you sure you want to remove this member?</p></b>
+                            <p><b>Member Name: </b>{memberToDelete?.user?.firstName || 'N/A'}</p>
+                            <p style={{color:"gray"}}>This action cannot be undone.</p>
+                        </div>
+                        <div className="gym-member-management__modal-footer">
+                            <button
+                                className="gym-member-management__modal-btn gym-member-management__modal-btn--cancel"
+                                onClick={() => {
+                                    setShowDeleteConfirmModal(false);
+                                    setMemberToDelete(null);
+                                }}
+                                disabled={deleteLoading}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                className="gym-member-management__modal-btn gym-member-management__modal-btn--delete"
+                                onClick={handleDeleteConfirm}
+                                disabled={deleteLoading}
+                            >
+                                {deleteLoading ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
