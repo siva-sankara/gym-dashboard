@@ -66,7 +66,7 @@
   border-radius: 25px;
   font-size: 1.1rem;
   background: white;
-  color: #333;
+  color: white;
   outline: none;
   height: 20px;
   width: 90%;
@@ -369,6 +369,12 @@ section h2::after {
   max-width: 400px;
   width: 100%;
   margin: 0 auto;
+}
+.gym-name-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {

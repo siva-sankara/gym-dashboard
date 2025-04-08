@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {  useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   FaDumbbell,
   FaUsers,
@@ -51,17 +51,17 @@ const AuthNavbar = ({ onLogout }) => {
     return currentPath === path;
   };
 
-  const handleLogout =async(e) => {
+  const handleLogout = async (e) => {
     e.preventDefault();
     try {
-    localStorage.clear();
-    sessionStorage.clear();
-    await new Promise(resolve => setTimeout(resolve, 100));
-    window.location.href = '/login';
-  } catch (error) {
-    console.error('Logout error:', error);
-    navigate('/login');
-  }
+      localStorage.clear();
+      sessionStorage.clear();
+      await new Promise(resolve => setTimeout(resolve, 100));
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+      navigate('/login');
+    }
   };
   const handleProfileClick = (e) => {
     e.preventDefault();
@@ -103,21 +103,21 @@ const AuthNavbar = ({ onLogout }) => {
           { to: '/all-users', icon: <FaUsers />, text: 'Users' },
           { to: '/settings', icon: <FaUserCog />, text: 'Settings' }
         ];
-        case 'gym_owner':
-          return [
-            { to: '/gym-owner-dashboard', icon: <FaHome />, text: 'Dashboard' },
-            { to: '/gym-owner-dashboard/mygyms', icon: <FaBuilding />, text: 'My Gyms' },
-            { to: '/gym-owner-dashboard/to-dos', icon: <FaListAlt />, text: 'Workout Planner' },
-            { to: '/gym-owner-dashboard/register-gym', icon: <FaPlusCircle />, text: 'Add New Gym' },
-            {
-              to: '#',
-              icon: <FaUser />,
-              text: 'My Account',
-              hasDropdown: true,
-              dropdownItems: getProfileDropdownItems(),
-              onClick: handleProfileClick
-            }
-          ];
+      case 'gym_owner':
+        return [
+          { to: '/gym-owner-dashboard', icon: <FaHome />, text: 'Dashboard' },
+          { to: '/gym-owner-dashboard/mygyms', icon: <FaBuilding />, text: 'My Gyms' },
+          { to: '/gym-owner-dashboard/to-dos', icon: <FaListAlt />, text: 'Workout Planner' },
+          { to: '/gym-owner-dashboard/register-gym', icon: <FaPlusCircle />, text: 'Add New Gym' },
+          {
+            to: '#',
+            icon: <FaUser />,
+            text: 'My Account',
+            hasDropdown: true,
+            dropdownItems: getProfileDropdownItems(),
+            onClick: handleProfileClick
+          }
+        ];
       case 'trainer':
         return [
           { to: '/dashboard', icon: <FaChartLine />, text: 'Dashboard' },
@@ -155,7 +155,7 @@ const AuthNavbar = ({ onLogout }) => {
     <nav className="role-navbar">
       <div className="role-navbar__brand">
         <FaDumbbell className="role-navbar__logo-icon" />
-        <span className="role-navbar__logo-text">GymFit</span>
+        <span className="role-navbar__logo-text">{userRole === "gym_owner" ? <Link className='logo__text' to='/gym-owner-dashboard'>GymFit</Link> : <Link className='logo__text' to='/user-dashboard'>GymFit</Link>}</span>
       </div>
 
       <button className="role-navbar__toggle" onClick={toggleMenu}>

@@ -12,7 +12,10 @@
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
-
+.logo__text{
+  text-decoration: none;
+  color: black;
+}
 .role-navbar__brand {
   display: flex;
   align-items: center;

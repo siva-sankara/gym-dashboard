@@ -18,8 +18,14 @@ const gymSlice = createSlice({
         setSelectedGym: (state, action) => {
             state.selectedGym = action.payload;
         },
+        updateGymMembers: (state, action) => {
+            const { gymId, members } = action.payload;
+            if (state.selectedGym?._id === gymId) {
+                state.selectedGym.members = members;
+            }
+        },
     },
 });
 
-export const { setGymList, setSelectedGym } = gymSlice.actions;
+export const { setGymList, setSelectedGym ,updateGymMembers } = gymSlice.actions;
 export default gymSlice.reducer;

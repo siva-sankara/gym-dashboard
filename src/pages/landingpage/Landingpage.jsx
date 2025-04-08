@@ -7,9 +7,12 @@ import './LandingPage.css';
 import FAQs from '../../components/faqs/FAQs';
 import Footer from '../../components/footer/Footer';
 import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export function LandingPage() {
-  const [selectedCity, setSelectedCity] = useState('mumbai ');
+  const location = useSelector((state) => state.location);
+
+  const [selectedCity, setSelectedCity] = useState(location?.address?.county|| 'vizag');
   const [showVideo, setShowVideo] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
